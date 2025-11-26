@@ -21,6 +21,14 @@
   let recognition: any = null;
   let autoRestartRecognition = $state(false);
   let showFinalReward = $state(false);
+  let textSize = $state('text-4xl'); // Default text size
+
+  function getCategoryIcon(): string {
+    if (!group) return '📦';
+    const categories = storage.getCategories();
+    const category = categories.find(c => c.id === group?.categoryId);
+    return category?.icon || '📦';
+  }
 
   onMount(() => {
     storage.initializeDefaultData();
@@ -207,10 +215,10 @@
   }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-sky-100 p-4">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 p-4">
   {#if showFinalReward && group}
     <!-- Final Reward Screen -->
-    <div class="bg-white p-8 rounded-2xl shadow-xl text-center max-w-lg w-full">
+    <div class="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-2xl w-full border-4 border-yellow-400">
       <div class="text-6xl mb-4">🎉</div>
       <h1 class="text-3xl font-bold mb-4 text-gray-800">Selamat!</h1>
       <p class="text-xl mb-4 text-gray-700">
@@ -242,19 +250,58 @@
     </div>
   {:else if words.length > 0 && !isFinished()}
     <!-- Game Screen -->
-    <div class="bg-white p-6 rounded-2xl shadow-xl max-w-md w-full text-center">
-      <div class="mb-4">
-        <p class="text-sm text-gray-500">Soal {currentIndex + 1} dari {words.length}</p>
-        {#if group}
-          <p class="text-xs text-gray-400">{group.name}</p>
-        {/if}
+    <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-4xl w-full border-4 border-blue-300">
+      <!-- Header with Progress -->
+      <div class="mb-6 flex items-center justify-between">
+        <div class="text-left">
+          <p class="text-lg font-bold text-blue-600">Soal {currentIndex + 1} dari {words.length}</p>
+          {#if group}
+            <p class="text-sm text-gray-500">{getCategoryIcon()} {group.name}</p>
+          {/if}
+        </div>
+        
+        <!-- Text Size Controls -->
+        <div class="flex items-center gap-2 bg-gray-100 rounded-full p-2">
+          <button
+            onclick={() => textSize = 'text-2xl'}
+            class="px-3 py-1 rounded-full font-bold {textSize === 'text-2xl' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}"
+          >
+            A
+          </button>
+          <button
+            onclick={() => textSize = 'text-4xl'}
+            class="px-3 py-1 rounded-full font-bold text-lg {textSize === 'text-4xl' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}"
+          >
+            A
+          </button>
+          <button
+            onclick={() => textSize = 'text-6xl'}
+            class="px-3 py-1 rounded-full font-bold text-xl {textSize === 'text-6xl' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}"
+          >
+            A
+          </button>
+        </div>
       </div>
 
-      <p class="text-gray-600 mb-2">Baca kata / kalimat ini:</p>
+      <!-- Progress Bar -->
+      <div class="mb-6">
+        <div class="bg-gray-200 rounded-full h-3">
+          <div 
+            class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500"
+            style="width: {((currentIndex) / words.length) * 100}%"
+          ></div>
+        </div>
+      </div>
 
-      {#if getCurrentWord()}
-        <WordLetters text={getCurrentWord()!.text} {correctLetterCount} />
-      {/if}
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6">
+        <p class="text-xl font-bold text-blue-800 mb-4">📖 Baca kata / kalimat ini:</p>
+
+        {#if getCurrentWord()}
+          <div class="{textSize} font-bold text-center mb-4">
+            <WordLetters text={getCurrentWord()!.text} {correctLetterCount} />
+          </div>
+        {/if}
+      </div>
 
       {#if !isListening}
         <button
