@@ -25,7 +25,7 @@
   <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<div class="min-h-screen p-6 bg-gradient-to-br from-purple-100 to-blue-100">
+<div class="min-h-screen p-6">
   <div class="mx-auto max-w-7xl">
     <div class="p-8 mb-6 bg-white shadow-xl rounded-2xl">
       <h1 class="mb-2 text-4xl font-bold text-gray-800">🎮 Admin Panel</h1>

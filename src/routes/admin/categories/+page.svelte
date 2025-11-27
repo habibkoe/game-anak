@@ -85,19 +85,19 @@
   }
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-6">
+<div class="min-h-screen p-6">
   <div class="max-w-6xl mx-auto">
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+    <div class="p-6 mb-6 bg-white shadow-xl rounded-2xl">
       <div class="flex items-center justify-between mb-4">
         <div>
           <h1 class="text-3xl font-bold text-gray-800">📁 Kelola Kategori</h1>
           <p class="text-gray-600">Buat dan kelola kategori permainan</p>
         </div>
         <div class="flex gap-3">
-          <a href="/admin" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold">
+          <a href="/admin" class="px-4 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600">
             ← Kembali
           </a>
-          <button onclick={() => openForm()} class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold">
+          <button onclick={() => openForm()} class="px-4 py-2 font-semibold text-white bg-purple-500 rounded-lg hover:bg-purple-600">
             + Tambah Kategori
           </button>
         </div>
@@ -105,31 +105,31 @@
     </div>
 
     {#if categories.length === 0}
-      <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
-        <div class="text-6xl mb-4">📂</div>
-        <h3 class="text-2xl font-bold text-gray-800 mb-2">Belum ada kategori</h3>
-        <p class="text-gray-600 mb-6">Mulai dengan membuat kategori pertama Anda</p>
-        <button onclick={() => openForm()} class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold">
+      <div class="p-12 text-center bg-white shadow-lg rounded-2xl">
+        <div class="mb-4 text-6xl">📂</div>
+        <h3 class="mb-2 text-2xl font-bold text-gray-800">Belum ada kategori</h3>
+        <p class="mb-6 text-gray-600">Mulai dengan membuat kategori pertama Anda</p>
+        <button onclick={() => openForm()} class="px-6 py-3 font-semibold text-white bg-purple-500 rounded-lg hover:bg-purple-600">
           + Tambah Kategori
         </button>
       </div>
     {:else}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {#each categories as category}
-          <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div class="p-6 transition-shadow bg-white shadow-lg rounded-2xl hover:shadow-xl">
             <div class="flex items-start justify-between mb-4">
               <div class="text-5xl">{category.icon || '📚'}</div>
               <div class="flex gap-2">
-                <button onclick={() => openForm(category)} class="text-blue-500 hover:text-blue-700 font-semibold text-sm">
+                <button onclick={() => openForm(category)} class="text-sm font-semibold text-blue-500 hover:text-blue-700">
                   ✏️
                 </button>
-                <button onclick={() => deleteCategory(category.id)} class="text-red-500 hover:text-red-700 font-semibold text-sm">
+                <button onclick={() => deleteCategory(category.id)} class="text-sm font-semibold text-red-500 hover:text-red-700">
                   🗑️
                 </button>
               </div>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">{category.name}</h3>
-            <p class="text-gray-600 text-sm mb-4">{category.description || 'Tidak ada deskripsi'}</p>
+            <h3 class="mb-2 text-xl font-bold text-gray-800">{category.name}</h3>
+            <p class="mb-4 text-sm text-gray-600">{category.description || 'Tidak ada deskripsi'}</p>
             <div class="text-xs text-gray-500">
               {storage.getGroupsByCategory(category.id).length} grup
             </div>
@@ -142,15 +142,15 @@
 
 <!-- Modal Form -->
 {#if showForm}
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+    <div class="w-full max-w-md p-6 bg-white shadow-2xl rounded-2xl">
+      <h2 class="mb-4 text-2xl font-bold text-gray-800">
         {editingId ? 'Edit Kategori' : 'Tambah Kategori'}
       </h2>
       
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Icon</label>
+          <label class="block mb-2 text-sm font-semibold text-gray-700">Icon</label>
           <div class="grid grid-cols-5 gap-2">
             {#each iconOptions as icon}
               <button
@@ -164,20 +164,20 @@
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Kategori *</label>
+          <label class="block mb-2 text-sm font-semibold text-gray-700">Nama Kategori *</label>
           <input
             type="text"
             bind:value={formData.name}
-            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="Contoh: Aktivitas Sehari-hari"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
+          <label class="block mb-2 text-sm font-semibold text-gray-700">Deskripsi</label>
           <textarea
             bind:value={formData.description}
-            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             rows="3"
             placeholder="Deskripsi kategori..."
           ></textarea>
@@ -185,10 +185,10 @@
       </div>
 
       <div class="flex gap-3 mt-6">
-        <button onclick={closeForm} class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg font-semibold">
+        <button onclick={closeForm} class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600">
           Batal
         </button>
-        <button onclick={saveCategory} class="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg font-semibold">
+        <button onclick={saveCategory} class="flex-1 py-2 font-semibold text-white bg-purple-500 rounded-lg hover:bg-purple-600">
           {editingId ? 'Simpan' : 'Tambah'}
         </button>
       </div>

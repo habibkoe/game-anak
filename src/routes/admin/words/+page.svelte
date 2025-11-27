@@ -128,21 +128,21 @@
   }
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-6">
-  <div class="max-w-7xl mx-auto">
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+<div class="min-h-screen p-6">
+  <div class="mx-auto max-w-7xl">
+    <div class="p-6 mb-6 bg-white shadow-xl rounded-2xl">
       <div class="flex items-center justify-between mb-4">
         <div>
           <h1 class="text-3xl font-bold text-gray-800">📝 Kelola Kata/Kalimat</h1>
           <p class="text-gray-600">Tambahkan teks dan gambar untuk anak-anak baca</p>
         </div>
         <div class="flex gap-3">
-          <a href="/admin" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold">
+          <a href="/admin" class="px-4 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600">
             ← Kembali
           </a>
           <button 
             onclick={() => openForm()} 
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold"
+            class="px-4 py-2 font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600"
             disabled={groups.length === 0}
           >
             + Tambah Kata
@@ -151,7 +151,7 @@
       </div>
 
       {#if groups.length > 0}
-        <div class="flex gap-2 flex-wrap">
+        <div class="flex flex-wrap gap-2">
           <button
             onclick={() => selectedGroup = 'all'}
             class="px-4 py-2 rounded-lg font-semibold {selectedGroup === 'all' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
@@ -172,20 +172,20 @@
     </div>
 
     {#if groups.length === 0}
-      <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
-        <div class="text-6xl mb-4">📦</div>
-        <h3 class="text-2xl font-bold text-gray-800 mb-2">Buat grup terlebih dahulu</h3>
-        <p class="text-gray-600 mb-6">Anda perlu membuat grup sebelum menambahkan kata</p>
-        <a href="/admin/groups" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">
+      <div class="p-12 text-center bg-white shadow-lg rounded-2xl">
+        <div class="mb-4 text-6xl">📦</div>
+        <h3 class="mb-2 text-2xl font-bold text-gray-800">Buat grup terlebih dahulu</h3>
+        <p class="mb-6 text-gray-600">Anda perlu membuat grup sebelum menambahkan kata</p>
+        <a href="/admin/groups" class="inline-block px-6 py-3 font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600">
           Kelola Grup
         </a>
       </div>
     {:else if filteredWords.length === 0}
-      <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
-        <div class="text-6xl mb-4">📝</div>
-        <h3 class="text-2xl font-bold text-gray-800 mb-2">Belum ada kata</h3>
-        <p class="text-gray-600 mb-6">Mulai dengan menambahkan kata pertama Anda</p>
-        <button onclick={() => openForm()} class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold">
+      <div class="p-12 text-center bg-white shadow-lg rounded-2xl">
+        <div class="mb-4 text-6xl">📝</div>
+        <h3 class="mb-2 text-2xl font-bold text-gray-800">Belum ada kata</h3>
+        <p class="mb-6 text-gray-600">Mulai dengan menambahkan kata pertama Anda</p>
+        <button onclick={() => openForm()} class="px-6 py-3 font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">
           + Tambah Kata
         </button>
       </div>
@@ -193,11 +193,11 @@
       <div class="space-y-4">
         {#each filteredWords as word, index}
           {@const category = getCategoryForGroup(word.groupId)}
-          <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div class="p-6 transition-shadow bg-white shadow-lg rounded-2xl hover:shadow-xl">
             <div class="flex gap-6">
               <!-- Order Number -->
               <div class="flex flex-col items-center gap-2">
-                <div class="bg-blue-100 text-blue-800 font-bold rounded-full w-10 h-10 flex items-center justify-center">
+                <div class="flex items-center justify-center w-10 h-10 font-bold text-blue-800 bg-blue-100 rounded-full">
                   {word.order}
                 </div>
                 {#if selectedGroup !== 'all'}
@@ -226,7 +226,7 @@
                   <img 
                     src={word.imageSrc} 
                     alt={word.text} 
-                    class="w-24 h-24 object-cover rounded-lg border-2 border-gray-200" 
+                    class="object-cover w-24 h-24 border-2 border-gray-200 rounded-lg" 
                     onerror={(e) => {
                       const target = e.currentTarget as HTMLImageElement;
                       target.style.display = 'none';
@@ -234,11 +234,11 @@
                       if (errorDiv) errorDiv.style.display = 'flex';
                     }}
                   />
-                  <div class="w-24 h-24 bg-gray-200 rounded-lg border-2 border-gray-200 hidden items-center justify-center text-3xl">
+                  <div class="items-center justify-center hidden w-24 h-24 text-3xl bg-gray-200 border-2 border-gray-200 rounded-lg">
                     ❌
                   </div>
                 {:else}
-                  <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center text-4xl">
+                  <div class="flex items-center justify-center w-24 h-24 text-4xl bg-gray-200 rounded-lg">
                     🖼️
                   </div>
                 {/if}
@@ -248,7 +248,7 @@
               <div class="flex-1">
                 <div class="flex items-start justify-between mb-2">
                   <div>
-                    <p class="text-xl font-bold text-gray-800 mb-1">{word.text}</p>
+                    <p class="mb-1 text-xl font-bold text-gray-800">{word.text}</p>
                     <p class="text-sm text-gray-500">
                       {category?.icon || '📦'} {getGroupName(word.groupId)}
                       {#if category}
@@ -257,15 +257,15 @@
                     </p>
                   </div>
                   <div class="flex gap-2">
-                    <button onclick={() => openForm(word)} class="text-blue-500 hover:text-blue-700 font-semibold">
+                    <button onclick={() => openForm(word)} class="font-semibold text-blue-500 hover:text-blue-700">
                       ✏️ Edit
                     </button>
-                    <button onclick={() => deleteWord(word.id)} class="text-red-500 hover:text-red-700 font-semibold">
+                    <button onclick={() => deleteWord(word.id)} class="font-semibold text-red-500 hover:text-red-700">
                       🗑️ Hapus
                     </button>
                   </div>
                 </div>
-                <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+                <p class="p-2 text-sm text-gray-600 rounded bg-gray-50">
                   📁 {word.imageSrc}
                 </p>
               </div>
@@ -279,20 +279,20 @@
 
 <!-- Modal Form -->
 {#if showForm}
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 my-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto bg-black bg-opacity-50">
+    <div class="w-full max-w-2xl p-6 my-8 bg-white shadow-2xl rounded-2xl">
+      <h2 class="mb-4 text-2xl font-bold text-gray-800">
         {editingId ? 'Edit Kata' : 'Tambah Kata'}
       </h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <!-- Left Column -->
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Grup *</label>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">Grup *</label>
             <select
               bind:value={formData.groupId}
-              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="">Pilih grup</option>
               {#each groups as group}
@@ -305,50 +305,50 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Teks / Kalimat *</label>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">Teks / Kalimat *</label>
             <textarea
               bind:value={formData.text}
-              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               rows="4"
               placeholder="Contoh: Anak bermain bola"
             ></textarea>
-            <p class="text-xs text-gray-500 mt-1">Teks yang harus dibaca anak</p>
+            <p class="mt-1 text-xs text-gray-500">Teks yang harus dibaca anak</p>
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Urutan</label>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">Urutan</label>
             <input
               type="number"
               bind:value={formData.order}
               min="1"
-              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            <p class="text-xs text-gray-500 mt-1">Urutan kata dalam grup</p>
+            <p class="mt-1 text-xs text-gray-500">Urutan kata dalam grup</p>
           </div>
         </div>
 
         <!-- Right Column -->
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Path Gambar *</label>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">Path Gambar *</label>
             <input
               type="text"
               bind:value={formData.imageSrc}
-              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="/images/anak_main_bola.png"
             />
-            <p class="text-xs text-gray-500 mt-1">URL atau path gambar</p>
+            <p class="mt-1 text-xs text-gray-500">URL atau path gambar</p>
           </div>
 
           <!-- Image Preview -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Preview</label>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">Preview</label>
             {#if formData.imageSrc}
               <div class="relative">
                 <img 
                   src={formData.imageSrc} 
                   alt="Preview" 
-                  class="w-full h-48 object-cover rounded-lg border-2 border-gray-300"
+                  class="object-cover w-full h-48 border-2 border-gray-300 rounded-lg"
                   onerror={(e) => {
                     const target = e.currentTarget as HTMLImageElement;
                     target.style.display = 'none';
@@ -356,22 +356,22 @@
                     if (errorDiv) errorDiv.style.display = 'flex';
                   }}
                 />
-                <div class="w-full h-48 bg-gray-100 rounded-lg border-2 border-gray-300 hidden items-center justify-center flex-col absolute top-0 left-0">
-                  <span class="text-6xl mb-2">❌</span>
+                <div class="absolute top-0 left-0 flex-col items-center justify-center hidden w-full h-48 bg-gray-100 border-2 border-gray-300 rounded-lg">
+                  <span class="mb-2 text-6xl">❌</span>
                   <span class="text-sm text-gray-600">Gambar tidak dapat dimuat</span>
                 </div>
               </div>
             {:else}
-              <div class="w-full h-48 bg-gray-100 rounded-lg border-2 border-gray-300 flex items-center justify-center flex-col">
-                <span class="text-6xl mb-2">🖼️</span>
+              <div class="flex flex-col items-center justify-center w-full h-48 bg-gray-100 border-2 border-gray-300 rounded-lg">
+                <span class="mb-2 text-6xl">🖼️</span>
                 <span class="text-sm text-gray-600">Masukkan path gambar</span>
               </div>
             {/if}
           </div>
 
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <p class="text-xs font-semibold text-blue-800 mb-1">💡 Tips:</p>
-            <ul class="text-xs text-blue-700 space-y-1">
+          <div class="p-3 border border-blue-200 rounded-lg bg-blue-50">
+            <p class="mb-1 text-xs font-semibold text-blue-800">💡 Tips:</p>
+            <ul class="space-y-1 text-xs text-blue-700">
               <li>• Letakkan gambar di folder /static/images/</li>
               <li>• Gunakan format: /images/nama-file.png</li>
               <li>• Ukuran yang disarankan: 800x600px</li>
@@ -381,10 +381,10 @@
       </div>
 
       <div class="flex gap-3 mt-6">
-        <button onclick={closeForm} class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg font-semibold">
+        <button onclick={closeForm} class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600">
           Batal
         </button>
-        <button onclick={saveWord} class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold">
+        <button onclick={saveWord} class="flex-1 py-2 font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">
           {editingId ? 'Simpan' : 'Tambah'}
         </button>
       </div>
