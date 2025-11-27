@@ -7,59 +7,59 @@
   });
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 p-6">
-  <div class="max-w-2xl w-full">
+<div class="flex items-center justify-center min-h-screen p-6 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+  <div class="w-full max-w-2xl">
     <!-- Main Card -->
-    <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center">
-      <div class="text-7xl mb-6">🎮</div>
-      <h1 class="text-5xl font-bold text-gray-800 mb-4">Game Belajar Bicara</h1>
-      <p class="text-xl text-gray-600 mb-8">
-        Permainan interaktif untuk mengajarkan anak-anak berbicara dengan gambar dan suara
+    <div class="p-8 text-center bg-white shadow-2xl rounded-3xl md:p-12">
+      <div class="mb-6 text-7xl">🎮</div>
+      <h1 class="mb-4 text-5xl font-bold text-gray-800">Game Belajar Membaca</h1>
+      <p class="mb-8 text-xl text-gray-600">
+        Permainan interaktif untuk mengajarkan anak-anak membaca dengan gambar dan suara
       </p>
 
       <!-- Main Action Buttons -->
-      <div class="space-y-4 mb-8">
+      <div class="mb-8 space-y-4">
         <a 
           href="/select"
-          class="block w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 px-8 rounded-2xl text-2xl font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+          class="block w-full px-8 py-4 text-2xl font-bold text-white transition-all transform shadow-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-2xl hover:shadow-xl hover:scale-105"
         >
           🎯 Mulai Bermain
         </a>
         
         <a 
           href="/admin"
-          class="block w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white py-4 px-8 rounded-2xl text-xl font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+          class="block w-full px-8 py-4 text-xl font-bold text-white transition-all transform shadow-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 rounded-2xl hover:shadow-xl hover:scale-105"
         >
           ⚙️ Admin Panel
         </a>
       </div>
 
       <!-- Features -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-        <div class="bg-blue-50 p-4 rounded-xl">
-          <div class="text-3xl mb-2">📚</div>
-          <h3 class="font-bold text-gray-800 mb-1">Banyak Kategori</h3>
-          <p class="text-sm text-gray-600">Kelompokkan kata berdasarkan tema</p>
+      <div class="grid grid-cols-1 gap-4 text-left md:grid-cols-3">
+        <div class="p-4 bg-blue-50 rounded-xl">
+          <div class="mb-2 text-3xl">📚</div>
+          <h3 class="mb-1 font-bold text-gray-800">Banyak Kategori</h3>
+          <p class="text-sm text-gray-600">Anda dapat mengelompokkan kata atau kalimat berdasarkan tema</p>
         </div>
         
-        <div class="bg-green-50 p-4 rounded-xl">
-          <div class="text-3xl mb-2">🎁</div>
-          <h3 class="font-bold text-gray-800 mb-1">Reward Menarik</h3>
-          <p class="text-sm text-gray-600">Setiap grup punya reward spesial</p>
+        <div class="p-4 bg-green-50 rounded-xl">
+          <div class="mb-2 text-3xl">🎁</div>
+          <h3 class="mb-1 font-bold text-gray-800">Hadiah Menarik</h3>
+          <p class="text-sm text-gray-600">Anda bisa menentukan sendiri hadiah untuk setiap groupnya</p>
         </div>
         
-        <div class="bg-purple-50 p-4 rounded-xl">
-          <div class="text-3xl mb-2">🎤</div>
-          <h3 class="font-bold text-gray-800 mb-1">Belajar Bicara</h3>
+        <div class="p-4 bg-purple-50 rounded-xl">
+          <div class="mb-2 text-3xl">🎤</div>
+          <h3 class="mb-1 font-bold text-gray-800">Belajar Membaca</h3>
           <p class="text-sm text-gray-600">Menggunakan teknologi speech recognition</p>
         </div>
       </div>
     </div>
 
     <!-- Info Card -->
-    <div class="mt-6 bg-white bg-opacity-90 rounded-2xl shadow-lg p-6 text-center">
+    <div class="p-6 mt-6 text-center bg-white shadow-lg bg-opacity-90 rounded-2xl">
       <p class="text-gray-600">
-        <strong>Catatan:</strong> Pastikan mikrofon browser sudah diizinkan untuk pengalaman terbaik
+        <strong>Catatan:</strong> Pastikan mikrofon pada browser anda telah diaktifkan
       </p>
     </div>
   </div>
