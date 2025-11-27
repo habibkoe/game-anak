@@ -215,7 +215,7 @@
   }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 p-4">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 p-4 font-fredoka">
   {#if showFinalReward && group}
     <!-- Final Reward Screen -->
     <div class="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-2xl w-full border-4 border-yellow-400">

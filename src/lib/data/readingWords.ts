@@ -35,7 +35,7 @@ export const WORDS: GameWord[] = [
   },
   {
     id: "word-5",
-    text: "anak-anak menyebrang dengan hati-hati di jalan raya",
+    text: "anak-anak menyeberang dengan hati-hati di jalan raya",
     imageSrc: "/images/anak_nyebrang_jalan.png",
     groupId: "group-1",
     order: 5
