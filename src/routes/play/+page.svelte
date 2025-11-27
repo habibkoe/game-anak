@@ -215,6 +215,11 @@
   }
 </script>
 
+<svelte:head>
+  <title>Bermain - Game Belajar Membaca</title>
+  <meta name="description" content="Latih kemampuan membaca anak dengan permainan interaktif menggunakan speech recognition. Baca kata dan kalimat untuk mendapatkan hadiah menarik!" />
+</svelte:head>
+
 <div class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 font-fredoka">
   {#if showFinalReward && group}
     <!-- Final Reward Screen -->

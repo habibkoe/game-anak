@@ -7,6 +7,11 @@
   });
 </script>
 
+<svelte:head>
+  <title>Game Belajar Membaca - Permainan Edukasi Anak Interaktif</title>
+  <meta name="description" content="Permainan interaktif untuk mengajarkan anak-anak membaca dengan gambar dan suara. Banyak kategori, hadiah menarik, dan menggunakan teknologi speech recognition." />
+</svelte:head>
+
 <div class="flex items-center justify-center min-h-screen p-6 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
   <div class="w-full max-w-2xl">
     <!-- Main Card -->

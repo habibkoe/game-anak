@@ -6,6 +6,7 @@
 </script>
 
 <svelte:head>
+	<title>Game Belajar Membaca - Permainan Edukasi Anak</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
