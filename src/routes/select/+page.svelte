@@ -1,17 +1,45 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { storage } from '$lib/services/storage';
+  import { authStore } from '$lib/stores/auth';
+  import { supabaseStorage } from '$lib/services/supabaseStorage';
   import type { Category, Group } from '$lib/types/game';
 
+  let user = $derived($authStore.user);
   let categories = $state<Category[]>([]);
   let groups = $state<Group[]>([]);
+  let groupWordCounts = $state<Record<string, number>>({});
+  let publicContent = $state<any>(null);
   let selectedCategory = $state<string | null>(null);
+  let loading = $state(true);
+  let error = $state('');
 
-  onMount(() => {
-    storage.initializeDefaultData();
-    categories = storage.getCategories();
-    groups = storage.getGroups();
+  onMount(async () => {
+    try {
+      if (user) {
+        // Load user's own content
+        categories = await supabaseStorage.getCategories();
+        groups = await supabaseStorage.getGroups();
+        
+        // Load word counts for each group
+        for (const group of groups) {
+          try {
+            const words = await supabaseStorage.getWordsByGroup(group.id);
+            groupWordCounts[group.id] = words.length;
+          } catch {
+            groupWordCounts[group.id] = 0;
+          }
+        }
+      } else {
+        // Load public preview content
+        publicContent = await supabaseStorage.getPublicContent();
+      }
+    } catch (e: any) {
+      error = 'Gagal memuat data: ' + e.message;
+      console.error('Error loading content:', e);
+    } finally {
+      loading = false;
+    }
   });
 
   let filteredGroups = $derived(
@@ -24,8 +52,8 @@
     goto(`/play?group=${groupId}`);
   }
 
-  function getWordsCount(groupId: string): number {
-    return storage.getWordsByGroup(groupId).length;
+  function selectPublicPreview() {
+    goto(`/play?preview=true`);
   }
 </script>
 
@@ -50,7 +78,56 @@
       </div>
     </div>
 
-    {#if categories.length === 0}
+    {#if loading}
+      <div class="flex items-center justify-center p-12">
+        <div class="text-center">
+          <div class="inline-block w-16 h-16 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+          <p class="mt-4 text-gray-600">Memuat konten...</p>
+        </div>
+      </div>
+    {:else if !user && publicContent}
+      <!-- Preview Mode Content -->
+      <div class="p-6 mb-6 border-2 border-yellow-400 rounded-xl bg-gradient-to-r from-yellow-50 to-orange-50">
+        <h2 class="mb-2 text-xl font-bold text-gray-800">🎯 Mode Preview</h2>
+        <p class="mb-4 text-sm text-gray-700">
+          Anda dapat mencoba 1 grup dengan {publicContent.words.length} contoh soal.
+          <a href="/register" class="font-semibold text-blue-600 hover:underline">Daftar sekarang</a> untuk membuat konten sendiri!
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6">
+        <button
+          onclick={selectPublicPreview}
+          class="p-6 text-left transition-all bg-white shadow-lg rounded-2xl hover:shadow-2xl hover:scale-105"
+        >
+          <div class="flex items-center gap-3 mb-4">
+            <div class="text-5xl">🎮</div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-800">{publicContent.groupName}</h3>
+              <p class="text-sm text-gray-500">{publicContent.categoryName}</p>
+            </div>
+          </div>
+
+          {#if publicContent.groupDescription}
+            <p class="mb-4 text-sm text-gray-600">{publicContent.groupDescription}</p>
+          {/if}
+
+          <div class="p-3 mb-4 border-2 border-yellow-200 rounded-lg bg-yellow-50">
+            <p class="mb-1 text-xs font-semibold text-yellow-800">🎁 REWARD AKHIR:</p>
+            <p class="text-sm font-bold text-yellow-900">{publicContent.finalRewardText}</p>
+          </div>
+
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600">
+              📝 {publicContent.words.length} kata
+            </span>
+            <span class="px-4 py-2 font-semibold text-white bg-green-500 rounded-full">
+              Coba Sekarang →
+            </span>
+          </div>
+        </button>
+      </div>
+    {:else if categories.length === 0}
       <div class="p-12 text-center bg-white shadow-lg rounded-2xl">
         <div class="mb-4 text-6xl">📦</div>
         <h3 class="mb-2 text-2xl font-bold text-gray-800">Belum ada konten</h3>
@@ -92,7 +169,7 @@
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {#each filteredGroups as group}
             {@const category = categories.find(c => c.id === group.categoryId)}
-            {@const wordsCount = getWordsCount(group.id)}
+            {@const wordsCount = groupWordCounts[group.id] || 0}
             <button
               onclick={() => selectGroup(group.id)}
               disabled={wordsCount === 0}
