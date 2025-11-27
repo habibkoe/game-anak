@@ -3,11 +3,13 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { storage } from '$lib/services/storage';
+  import { supabaseStorage } from '$lib/services/supabaseStorage';
   import WordLetters from '$lib/components/WordLetters.svelte';
   import RewardImage from '$lib/components/RewardImage.svelte';
   import type { GameWord, Group } from '$lib/types/game';
 
   let groupId = $state<string>('');
+  let isPreviewMode = $state(false);
   let group = $state<Group | undefined>(undefined);
   let words = $state<GameWord[]>([]);
   let currentIndex = $state(0);
@@ -30,29 +32,72 @@
     return category?.icon || '📦';
   }
 
-  onMount(() => {
+  onMount(async () => {
     storage.initializeDefaultData();
     
-    // Get group ID from URL
+    // Get parameters from URL
     const params = new URLSearchParams(window.location.search);
     groupId = params.get('group') || '';
+    const previewParam = params.get('preview');
+    isPreviewMode = previewParam === 'true';
     
-    if (!groupId) {
-      goto('/select');
-      return;
-    }
+    // Handle preview mode
+    if (isPreviewMode) {
+      try {
+        const publicContent = await supabaseStorage.getPublicContent();
+        if (!publicContent) {
+          goto('/select');
+          return;
+        }
+        
+        // Create a virtual group from public content
+        group = {
+          id: 'preview',
+          name: publicContent.groupName,
+          description: publicContent.groupDescription || '',
+          categoryId: 'preview',
+          finalRewardText: publicContent.finalRewardText,
+          finalRewardImage: publicContent.finalRewardImage || '',
+          createdAt: new Date()
+        };
+        
+        // Map public content words to GameWord format
+        words = publicContent.words.map(w => ({
+          id: w.id,
+          text: w.text,
+          imageSrc: w.imageSrc,
+          groupId: 'preview',
+          order: w.order
+        }));
+        
+        if (words.length === 0) {
+          goto('/select');
+          return;
+        }
+      } catch (error) {
+        console.error('Error loading preview content:', error);
+        goto('/select');
+        return;
+      }
+    } else {
+      // Regular mode - load from group ID
+      if (!groupId) {
+        goto('/select');
+        return;
+      }
 
-    // Load group and words
-    group = storage.getGroup(groupId);
-    if (!group) {
-      goto('/select');
-      return;
-    }
+      // Load group and words
+      group = storage.getGroup(groupId);
+      if (!group) {
+        goto('/select');
+        return;
+      }
 
-    words = storage.getWordsByGroup(groupId);
-    if (words.length === 0) {
-      goto('/select');
-      return;
+      words = storage.getWordsByGroup(groupId);
+      if (words.length === 0) {
+        goto('/select');
+        return;
+      }
     }
 
     // Check speech support
