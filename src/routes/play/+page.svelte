@@ -215,21 +215,21 @@
   }
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 p-4 font-fredoka">
+<div class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 font-fredoka">
   {#if showFinalReward && group}
     <!-- Final Reward Screen -->
-    <div class="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-2xl w-full border-4 border-yellow-400">
-      <div class="text-6xl mb-4">🎉</div>
-      <h1 class="text-3xl font-bold mb-4 text-gray-800">Selamat!</h1>
-      <p class="text-xl mb-4 text-gray-700">
+    <div class="w-full max-w-2xl p-8 text-center bg-white border-4 border-yellow-400 shadow-2xl rounded-3xl">
+      <div class="mb-4 text-6xl">🎉</div>
+      <h1 class="mb-4 text-3xl font-bold text-gray-800">Selamat!</h1>
+      <p class="mb-4 text-xl text-gray-700">
         Kamu telah menyelesaikan semua kata!
       </p>
-      <p class="text-lg mb-2 text-gray-600">Skor kamu: <span class="font-bold text-green-600">{score}</span> / {words.length}</p>
+      <p class="mb-2 text-lg text-gray-600">Skor kamu: <span class="font-bold text-green-600">{score}</span> / {words.length}</p>
       
       <!-- Final Reward -->
-      <div class="bg-gradient-to-r from-yellow-100 to-yellow-200 border-4 border-yellow-400 rounded-2xl p-6 mb-6">
-        <p class="text-lg font-bold text-yellow-900 mb-3">🎁 REWARD KAMU:</p>
-        <p class="text-3xl font-bold text-yellow-800 mb-4">{group.finalRewardText}</p>
+      <div class="p-6 mb-6 border-4 border-yellow-400 bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-2xl">
+        <p class="mb-3 text-lg font-bold text-yellow-900">🎁 REWARD KAMU:</p>
+        <p class="mb-4 text-3xl font-bold text-yellow-800">{group.finalRewardText}</p>
         {#if group.finalRewardImage}
           <img 
             src={group.finalRewardImage} 
@@ -240,19 +240,19 @@
       </div>
 
       <div class="flex gap-3">
-        <button onclick={resetGame} class="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold">
+        <button onclick={resetGame} class="flex-1 px-6 py-3 text-lg font-semibold text-white bg-green-500 rounded-full hover:bg-green-600">
           Main Lagi
         </button>
-        <a href="/select" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold inline-flex items-center justify-center">
+        <a href="/select" class="inline-flex items-center justify-center flex-1 px-6 py-3 text-lg font-semibold text-white bg-blue-500 rounded-full hover:bg-blue-600">
           Pilih Grup Lain
         </a>
       </div>
     </div>
   {:else if words.length > 0 && !isFinished()}
     <!-- Game Screen -->
-    <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-4xl w-full border-4 border-blue-300">
+    <div class="w-full max-w-4xl p-8 bg-white border-4 border-blue-300 shadow-2xl rounded-3xl">
       <!-- Header with Progress -->
-      <div class="mb-6 flex items-center justify-between">
+      <div class="flex items-center justify-between mb-6">
         <div class="text-left">
           <p class="text-lg font-bold text-blue-600">Soal {currentIndex + 1} dari {words.length}</p>
           {#if group}
@@ -261,7 +261,7 @@
         </div>
         
         <!-- Text Size Controls -->
-        <div class="flex items-center gap-2 bg-gray-100 rounded-full p-2">
+        <div class="flex items-center gap-2 p-2 bg-gray-100 rounded-full">
           <button
             onclick={() => textSize = 'text-2xl'}
             class="px-3 py-1 rounded-full font-bold {textSize === 'text-2xl' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}"
@@ -285,16 +285,16 @@
 
       <!-- Progress Bar -->
       <div class="mb-6">
-        <div class="bg-gray-200 rounded-full h-3">
+        <div class="h-3 bg-gray-200 rounded-full">
           <div 
-            class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500"
+            class="h-3 transition-all duration-500 rounded-full bg-gradient-to-r from-green-400 to-blue-500"
             style="width: {((currentIndex) / words.length) * 100}%"
           ></div>
         </div>
       </div>
 
-      <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6">
-        <p class="text-xl font-bold text-blue-800 mb-4">📖 Baca kata / kalimat ini:</p>
+      <div class="p-6 mb-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+        <p class="mb-4 text-xl font-bold text-blue-800">📖 Baca kata / kalimat ini:</p>
 
         {#if getCurrentWord()}
           <div class="{textSize} font-bold text-center mb-4">
@@ -305,18 +305,18 @@
 
       {#if !isListening}
         <button
-          class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-full text-lg font-semibold mb-4"
+          class="w-full py-3 mb-4 text-lg font-semibold text-white bg-green-500 rounded-full hover:bg-green-600"
           onclick={startListening}
         >
-          Mulai Bicara 🎤
+          Mulai Membaca 🎤
         </button>
       {:else}
         <div class="flex gap-2 mb-4">
-          <div class="flex-1 bg-blue-500 text-white py-3 rounded-full text-lg font-semibold flex items-center justify-center">
+          <div class="flex items-center justify-center flex-1 py-3 text-lg font-semibold text-white bg-blue-500 rounded-full">
             <span class="animate-pulse">🎤 Mendengarkan...</span>
           </div>
           <button
-            class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full text-lg font-semibold"
+            class="px-6 py-3 text-lg font-semibold text-white bg-red-500 rounded-full hover:bg-red-600"
             onclick={stopListening}
           >
             Berhenti
@@ -324,7 +324,7 @@
         </div>
       {/if}
 
-      <div class="text-left mb-3">
+      <div class="mb-3 text-left">
         <p class="text-sm font-medium text-gray-600">Yang terdengar:</p>
         <div class="border p-2 rounded-lg bg-gray-50 min-h-[40px]">
           {recognizedText || '—'}
@@ -332,17 +332,17 @@
       </div>
 
       {#if status === 'correct'}
-        <p class="text-green-600 font-semibold text-lg">Benar! Hebat! 🎉</p>
+        <p class="text-lg font-semibold text-green-600">Benar! Hebat! 🎉</p>
       {:else if status === 'wrong'}
-        <p class="text-red-500 font-semibold text-lg">Belum tepat, coba lagi 😄</p>
+        <p class="text-lg font-semibold text-red-500">Belum tepat, coba lagi 😄</p>
       {/if}
 
       {#if getCurrentWord()}
         <RewardImage show={showImage} src={getCurrentWord()!.imageSrc} alt={getCurrentWord()!.text} />
       {/if}
 
-      <div class="mt-4 pt-4 border-t">
-        <a href="/select" class="text-gray-500 hover:text-gray-700 text-sm">
+      <div class="pt-4 mt-4 border-t">
+        <a href="/select" class="text-sm text-gray-500 hover:text-gray-700">
           ← Kembali ke pilihan
         </a>
       </div>
