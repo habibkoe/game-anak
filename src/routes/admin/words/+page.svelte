@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { storage } from '$lib/services/storage';
   import type { GameWord, Group, Category } from '$lib/types/game';
+  import ImageUploader from '$lib/components/ImageUploader.svelte';
 
   let words = $state<GameWord[]>([]);
   let groups = $state<Group[]>([]);
@@ -330,52 +331,35 @@
         <!-- Right Column -->
         <div class="space-y-4">
           <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">Path Gambar *</label>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">Upload Gambar *</label>
+            <ImageUploader
+              currentImageUrl={formData.imageSrc}
+              onImageUploaded={(url) => formData.imageSrc = url}
+              folder="words"
+              aspectRatio={4/3}
+            />
+          </div>
+
+          <div class="p-3 border border-blue-200 rounded-lg bg-blue-50">
+            <p class="mb-1 text-xs font-semibold text-blue-800">💡 Tips:</p>
+            <ul class="space-y-1 text-xs text-blue-700">
+              <li>• Upload gambar langsung atau drag & drop</li>
+              <li>• Crop dan adjust gambar sebelum upload</li>
+              <li>• Gambar akan otomatis dioptimasi</li>
+              <li>• Max ukuran file: 5MB</li>
+            </ul>
+          </div>
+
+          <!-- Optional: Manual URL Input -->
+          <div>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">Atau masukkan URL manual (opsional)</label>
             <input
               type="text"
               bind:value={formData.imageSrc}
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="/images/anak_main_bola.png"
             />
-            <p class="mt-1 text-xs text-gray-500">URL atau path gambar</p>
-          </div>
-
-          <!-- Image Preview -->
-          <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">Preview</label>
-            {#if formData.imageSrc}
-              <div class="relative">
-                <img 
-                  src={formData.imageSrc} 
-                  alt="Preview" 
-                  class="object-cover w-full h-48 border-2 border-gray-300 rounded-lg"
-                  onerror={(e) => {
-                    const target = e.currentTarget as HTMLImageElement;
-                    target.style.display = 'none';
-                    const errorDiv = target.nextElementSibling as HTMLElement;
-                    if (errorDiv) errorDiv.style.display = 'flex';
-                  }}
-                />
-                <div class="absolute top-0 left-0 flex-col items-center justify-center hidden w-full h-48 bg-gray-100 border-2 border-gray-300 rounded-lg">
-                  <span class="mb-2 text-6xl">❌</span>
-                  <span class="text-sm text-gray-600">Gambar tidak dapat dimuat</span>
-                </div>
-              </div>
-            {:else}
-              <div class="flex flex-col items-center justify-center w-full h-48 bg-gray-100 border-2 border-gray-300 rounded-lg">
-                <span class="mb-2 text-6xl">🖼️</span>
-                <span class="text-sm text-gray-600">Masukkan path gambar</span>
-              </div>
-            {/if}
-          </div>
-
-          <div class="p-3 border border-blue-200 rounded-lg bg-blue-50">
-            <p class="mb-1 text-xs font-semibold text-blue-800">💡 Tips:</p>
-            <ul class="space-y-1 text-xs text-blue-700">
-              <li>• Letakkan gambar di folder /static/images/</li>
-              <li>• Gunakan format: /images/nama-file.png</li>
-              <li>• Ukuran yang disarankan: 800x600px</li>
-            </ul>
+            <p class="mt-1 text-xs text-gray-500">Untuk gambar dari folder static atau URL eksternal</p>
           </div>
         </div>
       </div>

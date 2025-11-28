@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Import cropperjs CSS */
+@import 'cropperjs/dist/cropper.css';
