@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { storage } from '$lib/services/storage';
+  import { supabaseGame } from '$lib/services/supabaseGame';
   import type { GameWord, Group, Category } from '$lib/types/game';
   import ImageUploader from '$lib/components/ImageUploader.svelte';
 
@@ -10,6 +10,8 @@
   let showForm = $state(false);
   let editingId = $state<string | null>(null);
   let selectedGroup = $state<string>('all');
+  let loading = $state(false);
+  let saving = $state(false);
   
   let formData = $state({
     text: '',
@@ -28,17 +30,19 @@
     loadData();
   });
 
-  function loadData() {
-    words = storage.getWords();
-    groups = storage.getGroups();
-    categories = storage.getCategories();
+  async function loadData() {
+    loading = true;
+    words = await supabaseGame.getWords();
+    groups = await supabaseGame.getGroups();
+    categories = await supabaseGame.getCategories();
+    loading = false;
   }
 
   let filteredWords = $derived(selectedGroup === 'all' 
     ? words 
     : words.filter(w => w.groupId === selectedGroup).sort((a, b) => a.order - b.order));
 
-  function openForm(word?: GameWord) {
+  async function openForm(word?: GameWord) {
     if (word) {
       editingId = word.id;
       formData = {
@@ -50,7 +54,7 @@
     } else {
       editingId = null;
       const targetGroup = selectedGroup !== 'all' ? selectedGroup : groups[0]?.id || '';
-      const existingWords = targetGroup ? storage.getWordsByGroup(targetGroup) : [];
+      const existingWords = targetGroup ? await supabaseGame.getWordsByGroup(targetGroup) : [];
       formData = { 
         text: '', 
         imageSrc: '',
@@ -66,56 +70,73 @@
     editingId = null;
   }
 
-  function saveWord() {
+  async function saveWord() {
     if (!formData.text.trim() || !formData.groupId || !formData.imageSrc.trim()) {
       alert('Teks, grup, dan gambar harus diisi!');
       return;
     }
 
+    saving = true;
+
     if (editingId) {
-      storage.updateWord(editingId, {
+      const success = await supabaseGame.updateWord(editingId, {
         text: formData.text,
         imageSrc: formData.imageSrc,
         groupId: formData.groupId,
         order: formData.order
       });
+      
+      if (!success) {
+        alert('Gagal mengupdate kata. Silakan coba lagi.');
+        saving = false;
+        return;
+      }
     } else {
-      const newWord: GameWord = {
-        id: `word-${Date.now()}`,
+      const newWord = await supabaseGame.addWord({
         text: formData.text,
         imageSrc: formData.imageSrc,
         groupId: formData.groupId,
         order: formData.order
-      };
-      storage.addWord(newWord);
+      });
+      
+      if (!newWord) {
+        alert('Gagal menambahkan kata. Silakan coba lagi.');
+        saving = false;
+        return;
+      }
     }
 
-    loadData();
+    saving = false;
+    await loadData();
     closeForm();
   }
 
-  function deleteWord(id: string) {
+  async function deleteWord(id: string) {
     if (window.confirm('Apakah Anda yakin ingin menghapus kata ini?')) {
-      storage.deleteWord(id);
-      loadData();
+      const success = await supabaseGame.deleteWord(id);
+      if (success) {
+        await loadData();
+      } else {
+        alert('Gagal menghapus kata. Silakan coba lagi.');
+      }
     }
   }
 
-  function moveWord(word: GameWord, direction: 'up' | 'down') {
-    const groupWords = storage.getWordsByGroup(word.groupId);
+  async function moveWord(word: GameWord, direction: 'up' | 'down') {
+    const groupWords = await supabaseGame.getWordsByGroup(word.groupId);
     const currentIndex = groupWords.findIndex(w => w.id === word.id);
     
     if (direction === 'up' && currentIndex > 0) {
       const prevWord = groupWords[currentIndex - 1];
-      storage.updateWord(word.id, { order: prevWord.order });
-      storage.updateWord(prevWord.id, { order: word.order });
+      await supabaseGame.updateWord(word.id, { order: prevWord.order });
+      await supabaseGame.updateWord(prevWord.id, { order: word.order });
     } else if (direction === 'down' && currentIndex < groupWords.length - 1) {
       const nextWord = groupWords[currentIndex + 1];
-      storage.updateWord(word.id, { order: nextWord.order });
-      storage.updateWord(nextWord.id, { order: word.order });
+      await supabaseGame.updateWord(word.id, { order: nextWord.order });
+      await supabaseGame.updateWord(nextWord.id, { order: word.order });
     }
     
-    loadData();
+    await loadData();
   }
 
   function getGroupName(groupId: string): string {
@@ -165,7 +186,7 @@
               onclick={() => selectedGroup = group.id}
               class="px-4 py-2 rounded-lg font-semibold {selectedGroup === group.id ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}"
             >
-              {category?.icon || '📦'} {group.name} ({storage.getWordsByGroup(group.id).length})
+              {category?.icon || '📦'} {group.name} ({words.filter(w => w.groupId === group.id).length})
             </button>
           {/each}
         </div>
@@ -365,11 +386,19 @@
       </div>
 
       <div class="flex gap-3 mt-6">
-        <button onclick={closeForm} class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600">
+        <button 
+          onclick={closeForm} 
+          disabled={saving}
+          class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+        >
           Batal
         </button>
-        <button onclick={saveWord} class="flex-1 py-2 font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">
-          {editingId ? 'Simpan' : 'Tambah'}
+        <button 
+          onclick={saveWord} 
+          disabled={saving}
+          class="flex-1 py-2 font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600 disabled:opacity-50"
+        >
+          {saving ? 'Menyimpan...' : (editingId ? 'Simpan' : 'Tambah')}
         </button>
       </div>
     </div>

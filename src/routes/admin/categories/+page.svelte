@@ -1,11 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { storage } from '$lib/services/storage';
+  import { supabaseGame } from '$lib/services/supabaseGame';
   import type { Category } from '$lib/types/game';
 
   let categories = $state<Category[]>([]);
   let showForm = $state(false);
   let editingId = $state<string | null>(null);
+  let loading = $state(false);
+  let saving = $state(false);
+  let groupCounts = $state<Map<string, number>>(new Map());
   
   let formData = $state({
     name: '',
@@ -19,8 +22,19 @@
     loadCategories();
   });
 
-  function loadCategories() {
-    categories = storage.getCategories();
+  async function loadCategories() {
+    loading = true;
+    categories = await supabaseGame.getCategories();
+    
+    // Load group counts for each category
+    const counts = new Map<string, number>();
+    for (const category of categories) {
+      const groups = await supabaseGame.getGroupsByCategory(category.id);
+      counts.set(category.id, groups.length);
+    }
+    groupCounts = counts;
+    
+    loading = false;
   }
 
   function openForm(category?: Category) {
@@ -44,35 +58,47 @@
     formData = { name: '', description: '', icon: '📚' };
   }
 
-  function saveCategory() {
+  async function saveCategory() {
     if (!formData.name.trim()) {
       alert('Nama kategori harus diisi!');
       return;
     }
 
+    saving = true;
+
     if (editingId) {
-      storage.updateCategory(editingId, {
+      const success = await supabaseGame.updateCategory(editingId, {
         name: formData.name,
         description: formData.description,
         icon: formData.icon
       });
+      
+      if (!success) {
+        alert('Gagal mengupdate kategori. Silakan coba lagi.');
+        saving = false;
+        return;
+      }
     } else {
-      const newCategory: Category = {
-        id: `cat-${Date.now()}`,
+      const newCategory = await supabaseGame.addCategory({
         name: formData.name,
         description: formData.description,
-        icon: formData.icon,
-        createdAt: new Date()
-      };
-      storage.addCategory(newCategory);
+        icon: formData.icon
+      });
+      
+      if (!newCategory) {
+        alert('Gagal menambahkan kategori. Silakan coba lagi.');
+        saving = false;
+        return;
+      }
     }
 
-    loadCategories();
+    saving = false;
+    await loadCategories();
     closeForm();
   }
 
-  function deleteCategory(id: string) {
-    const groups = storage.getGroupsByCategory(id);
+  async function deleteCategory(id: string) {
+    const groups = await supabaseGame.getGroupsByCategory(id);
     if (groups.length > 0) {
       const confirm = window.confirm(
         `Kategori ini memiliki ${groups.length} grup. Menghapus kategori akan menghapus semua grup dan kata terkait. Lanjutkan?`
@@ -80,8 +106,17 @@
       if (!confirm) return;
     }
 
-    storage.deleteCategory(id);
-    loadCategories();
+    const success = await supabaseGame.deleteCategory(id);
+    if (success) {
+      await loadCategories();
+    } else {
+      alert('Gagal menghapus kategori. Silakan coba lagi.');
+    }
+  }
+
+  async function getGroupCount(categoryId: string): Promise<number> {
+    const groups = await supabaseGame.getGroupsByCategory(categoryId);
+    return groups.length;
   }
 </script>
 
@@ -131,7 +166,7 @@
             <h3 class="mb-2 text-xl font-bold text-gray-800">{category.name}</h3>
             <p class="mb-4 text-sm text-gray-600">{category.description || 'Tidak ada deskripsi'}</p>
             <div class="text-xs text-gray-500">
-              {storage.getGroupsByCategory(category.id).length} grup
+              {groupCounts.get(category.id) || 0} grup
             </div>
           </div>
         {/each}
@@ -185,11 +220,19 @@
       </div>
 
       <div class="flex gap-3 mt-6">
-        <button onclick={closeForm} class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600">
+        <button 
+          onclick={closeForm} 
+          disabled={saving}
+          class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+        >
           Batal
         </button>
-        <button onclick={saveCategory} class="flex-1 py-2 font-semibold text-white bg-purple-500 rounded-lg hover:bg-purple-600">
-          {editingId ? 'Simpan' : 'Tambah'}
+        <button 
+          onclick={saveCategory} 
+          disabled={saving}
+          class="flex-1 py-2 font-semibold text-white bg-purple-500 rounded-lg hover:bg-purple-600 disabled:opacity-50"
+        >
+          {saving ? 'Menyimpan...' : (editingId ? 'Simpan' : 'Tambah')}
         </button>
       </div>
     </div>

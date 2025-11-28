@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { storage } from '$lib/services/storage';
+  import { supabaseGame } from '$lib/services/supabaseGame';
   import type { Group, Category } from '$lib/types/game';
   import ImageUploader from '$lib/components/ImageUploader.svelte';
 
@@ -9,6 +9,9 @@
   let showForm = $state(false);
   let editingId = $state<string | null>(null);
   let selectedCategory = $state<string>('all');
+  let loading = $state(false);
+  let saving = $state(false);
+  let wordCounts = $state<Map<string, number>>(new Map());
   
   let formData = $state({
     name: '',
@@ -22,9 +25,20 @@
     loadData();
   });
 
-  function loadData() {
-    groups = storage.getGroups();
-    categories = storage.getCategories();
+  async function loadData() {
+    loading = true;
+    groups = await supabaseGame.getGroups();
+    categories = await supabaseGame.getCategories();
+    
+    // Load word counts for each group
+    const counts = new Map<string, number>();
+    for (const group of groups) {
+      const words = await supabaseGame.getWordsByGroup(group.id);
+      counts.set(group.id, words.length);
+    }
+    wordCounts = counts;
+    
+    loading = false;
   }
 
   let filteredGroups = $derived(selectedCategory === 'all' 
@@ -59,39 +73,51 @@
     editingId = null;
   }
 
-  function saveGroup() {
+  async function saveGroup() {
     if (!formData.name.trim() || !formData.categoryId || !formData.finalRewardText.trim()) {
       alert('Nama grup, kategori, dan reward akhir harus diisi!');
       return;
     }
 
+    saving = true;
+
     if (editingId) {
-      storage.updateGroup(editingId, {
+      const success = await supabaseGame.updateGroup(editingId, {
         name: formData.name,
         categoryId: formData.categoryId,
         description: formData.description,
         finalRewardText: formData.finalRewardText,
         finalRewardImage: formData.finalRewardImage
       });
+      
+      if (!success) {
+        alert('Gagal mengupdate grup. Silakan coba lagi.');
+        saving = false;
+        return;
+      }
     } else {
-      const newGroup: Group = {
-        id: `group-${Date.now()}`,
+      const newGroup = await supabaseGame.addGroup({
         name: formData.name,
         categoryId: formData.categoryId,
         description: formData.description,
         finalRewardText: formData.finalRewardText,
-        finalRewardImage: formData.finalRewardImage,
-        createdAt: new Date()
-      };
-      storage.addGroup(newGroup);
+        finalRewardImage: formData.finalRewardImage
+      });
+      
+      if (!newGroup) {
+        alert('Gagal menambahkan grup. Silakan coba lagi.');
+        saving = false;
+        return;
+      }
     }
 
-    loadData();
+    saving = false;
+    await loadData();
     closeForm();
   }
 
-  function deleteGroup(id: string) {
-    const words = storage.getWordsByGroup(id);
+  async function deleteGroup(id: string) {
+    const words = await supabaseGame.getWordsByGroup(id);
     if (words.length > 0) {
       const confirm = window.confirm(
         `Grup ini memiliki ${words.length} kata. Menghapus grup akan menghapus semua kata terkait. Lanjutkan?`
@@ -99,8 +125,12 @@
       if (!confirm) return;
     }
 
-    storage.deleteGroup(id);
-    loadData();
+    const success = await supabaseGame.deleteGroup(id);
+    if (success) {
+      await loadData();
+    } else {
+      alert('Gagal menghapus grup. Silakan coba lagi.');
+    }
   }
 
   function getCategoryName(categoryId: string): string {
@@ -205,7 +235,7 @@
             </div>
 
             <div class="flex items-center justify-between text-xs text-gray-500">
-              <span>{storage.getWordsByGroup(group.id).length} kata</span>
+              <span>{wordCounts.get(group.id) || 0} kata</span>
               <a href="/admin/words?group={group.id}" class="font-semibold text-blue-500 hover:text-blue-700">
                 Kelola Kata →
               </a>
@@ -293,11 +323,19 @@
       </div>
 
       <div class="flex gap-3 mt-6">
-        <button onclick={closeForm} class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600">
+        <button 
+          onclick={closeForm} 
+          disabled={saving}
+          class="flex-1 py-2 font-semibold text-white bg-gray-500 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+        >
           Batal
         </button>
-        <button onclick={saveGroup} class="flex-1 py-2 font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600">
-          {editingId ? 'Simpan' : 'Tambah'}
+        <button 
+          onclick={saveGroup} 
+          disabled={saving}
+          class="flex-1 py-2 font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 disabled:opacity-50"
+        >
+          {saving ? 'Menyimpan...' : (editingId ? 'Simpan' : 'Tambah')}
         </button>
       </div>
     </div>
