@@ -62,7 +62,7 @@
   <meta name="description" content="Pilih kategori dan grup permainan untuk mulai belajar membaca. Berbagai pilihan tema dan level untuk anak-anak." />
 </svelte:head>
 
-<div class="min-h-screen p-6 bg-gradient-to-br from-blue-100 to-purple-100">
+<div class="min-h-screen p-6" style="background-image: url('/assets/bg-garden.svg'); background-size: cover; background-position: center; background-attachment: fixed;">
   <div class="max-w-6xl mx-auto">
     <!-- Header -->
     <div class="p-8 mb-6 text-center bg-white shadow-xl rounded-2xl">

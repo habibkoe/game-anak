@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1920"
+  height="1080"
+  viewBox="0 0 1920 1080"
+>
+  <defs>
+    <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8fd3ff"/>
+      <stop offset="100%" stop-color="#e6f6ff"/>
+    </linearGradient>
+
+    <linearGradient id="grassGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#76c26a"/>
+      <stop offset="100%" stop-color="#4ea94a"/>
+    </linearGradient>
+
+    <linearGradient id="riverGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#63c7ff"/>
+      <stop offset="100%" stop-color="#2a8fdc"/>
+    </linearGradient>
+
+    <radialGradient id="sunGradient" cx="50%" cy="30%" r="20%">
+      <stop offset="0%" stop-color="#fff9c4"/>
+      <stop offset="100%" stop-color="#ffd54f"/>
+    </radialGradient>
+
+    <style>
+      .cloud { fill: #ffffff; opacity: 0.9; }
+      .hill { fill: #7fc96d; }
+      .tree-trunk { fill: #8d5b3c; }
+      .tree-leaf { fill: #59b14f; }
+      .flower-stem { stroke: #2f7c3b; stroke-width: 3; }
+      .flower-center { fill: #ffd54f; }
+      .kid-skin { fill: #ffcc99; }
+      .kid-shirt-1 { fill: #ff7373; }
+      .kid-shirt-2 { fill: #ffb74d; }
+      .kid-shirt-3 { fill: #64b5f6; }
+      .kid-pants-1 { fill: #4fc3f7; }
+      .kid-pants-2 { fill: #9575cd; }
+      .kid-pants-3 { fill: #4db6ac; }
+      .kid-hair-dark { fill: #4e342e; }
+      .kid-hair-brown { fill: #6d4c41; }
+      .kid-hair-blond { fill: #ffe082; }
+    </style>
+  </defs>
+
+  <!-- Sky -->
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#skyGradient)" />
+
+  <!-- Sun -->
+  <circle cx="1600" cy="150" r="90" fill="url(#sunGradient)" opacity="0.9" />
+
+  <!-- Clouds -->
+  <g class="cloud" transform="translate(200,150)">
+    <circle cx="0" cy="0" r="45" />
+    <circle cx="50" cy="-20" r="55" />
+    <circle cx="105" cy="0" r="40" />
+    <circle cx="55" cy="20" r="42" />
+  </g>
+
+  <g class="cloud" transform="translate(550,100) scale(0.9)">
+    <circle cx="0" cy="0" r="35" />
+    <circle cx="40" cy="-15" r="45" />
+    <circle cx="85" cy="5" r="35" />
+  </g>
+
+  <g class="cloud" transform="translate(1050,190) scale(1.1)">
+    <circle cx="0" cy="0" r="40" />
+    <circle cx="50" cy="-15" r="50" />
+    <circle cx="95" cy="5" r="38" />
+  </g>
+
+  <!-- Distant hills -->
+  <path
+    class="hill"
+    opacity="0.7"
+    d="M0,520
+       C300,420 500,420 800,520
+       C1100,620 1350,620 1700,520
+       C1820,490 1920,500 1920,500
+       L1920,650 L0,650 Z"
+  />
+
+  <path
+    class="hill"
+    opacity="0.9"
+    d="M0,580
+       C250,500 450,510 720,580
+       C1050,670 1350,660 1650,590
+       C1800,560 1920,560 1920,560
+       L1920,720 L0,720 Z"
+  />
+
+  <!-- River -->
+  <path
+    d="M350,1080
+       C460,880 520,810 680,720
+       C880,605 1150,610 1320,540
+       C1480,475 1620,420 1920,410
+       L1920,1080 Z"
+    fill="url(#riverGradient)"
+    opacity="0.9"
+  />
+
+  <!-- Grass foreground -->
+  <rect
+    x="0"
+    y="650"
+    width="1920"
+    height="430"
+    fill="url(#grassGradient)"
+  />
+
+  <!-- Slight darker band near bottom for depth -->
+  <path
+    d="M0,920
+       C350,880 600,900 900,930
+       C1200,960 1500,950 1920,940
+       L1920,1080 L0,1080 Z"
+    fill="#4c9e47"
+    opacity="0.7"
+  />
+
+  <!-- Trees (left) -->
+  <g transform="translate(180,540) scale(1.1)">
+    <rect class="tree-trunk" x="-12" y="40" width="24" height="110" rx="6" />
+    <circle class="tree-leaf" cx="0" cy="20" r="40" />
+    <circle class="tree-leaf" cx="-25" cy="10" r="32" />
+    <circle class="tree-leaf" cx="25" cy="5" r="32" />
+  </g>
+
+  <g transform="translate(260,560)">
+    <rect class="tree-trunk" x="-10" y="45" width="20" height="95" rx="5" />
+    <circle class="tree-leaf" cx="0" cy="25" r="34" />
+    <circle class="tree-leaf" cx="-22" cy="18" r="26" />
+    <circle class="tree-leaf" cx="22" cy="15" r="26" />
+  </g>
+
+  <!-- Trees (right) -->
+  <g transform="translate(1650,540) scale(1.1)">
+    <rect class="tree-trunk" x="-12" y="40" width="24" height="110" rx="6" />
+    <circle class="tree-leaf" cx="0" cy="20" r="40" />
+    <circle class="tree-leaf" cx="-25" cy="10" r="32" />
+    <circle class="tree-leaf" cx="25" cy="5" r="32" />
+  </g>
+
+  <g transform="translate(1570,560)">
+    <rect class="tree-trunk" x="-10" y="45" width="20" height="95" rx="5" />
+    <circle class="tree-leaf" cx="0" cy="25" r="34" />
+    <circle class="tree-leaf" cx="-22" cy="18" r="26" />
+    <circle class="tree-leaf" cx="22" cy="15" r="26" />
+  </g>
+
+  <!-- Flowers: scattered -->
+  <g transform="translate(0,40)">
+    <!-- Flower functionally repeated: stem line + petals + center -->
+    <g transform="translate(260,860)">
+      <line class="flower-stem" x1="0" y1="0" x2="0" y2="40" />
+      <circle fill="#ff6fb0" cx="-8" cy="-5" r="6" />
+      <circle fill="#ff6fb0" cx="8" cy="-5" r="6" />
+      <circle fill="#ff6fb0" cx="0" cy="-15" r="6" />
+      <circle fill="#ff6fb0" cx="0" cy="5" r="6" />
+      <circle class="flower-center" cx="0" cy="-5" r="5" />
+    </g>
+
+    <g transform="translate(420,890) scale(1.1)">
+      <line class="flower-stem" x1="0" y1="0" x2="0" y2="40" />
+      <circle fill="#ffeb3b" cx="-8" cy="-5" r="6" />
+      <circle fill="#ffeb3b" cx="8" cy="-5" r="6" />
+      <circle fill="#ffeb3b" cx="0" cy="-15" r="6" />
+      <circle fill="#ffeb3b" cx="0" cy="5" r="6" />
+      <circle class="flower-center" cx="0" cy="-5" r="5" />
+    </g>
+
+    <g transform="translate(620,880) scale(0.95)">
+      <line class="flower-stem" x1="0" y1="0" x2="0" y2="40" />
+      <circle fill="#ff8a65" cx="-8" cy="-5" r="6" />
+      <circle fill="#ff8a65" cx="8" cy="-5" r="6" />
+      <circle fill="#ff8a65" cx="0" cy="-15" r="6" />
+      <circle fill="#ff8a65" cx="0" cy="5" r="6" />
+      <circle class="flower-center" cx="0" cy="-5" r="5" />
+    </g>
+
+    <g transform="translate(980,900)">
+      <line class="flower-stem" x1="0" y1="0" x2="0" y2="40" />
+      <circle fill="#ba68c8" cx="-8" cy="-5" r="6" />
+      <circle fill="#ba68c8" cx="8" cy="-5" r="6" />
+      <circle fill="#ba68c8" cx="0" cy="-15" r="6" />
+      <circle fill="#ba68c8" cx="0" cy="5" r="6" />
+      <circle class="flower-center" cx="0" cy="-5" r="5" />
+    </g>
+
+    <g transform="translate(1380,880) scale(1.1)">
+      <line class="flower-stem" x1="0" y1="0" x2="0" y2="40" />
+      <circle fill="#ff6fb0" cx="-8" cy="-5" r="6" />
+      <circle fill="#ff6fb0" cx="8" cy="-5" r="6" />
+      <circle fill="#ff6fb0" cx="0" cy="-15" r="6" />
+      <circle fill="#ff6fb0" cx="0" cy="5" r="6" />
+      <circle class="flower-center" cx="0" cy="-5" r="5" />
+    </g>
+
+    <g transform="translate(1540,900) scale(0.95)">
+      <line class="flower-stem" x1="0" y1="0" x2="0" y2="40" />
+      <circle fill="#ffeb3b" cx="-8" cy="-5" r="6" />
+      <circle fill="#ffeb3b" cx="8" cy="-5" r="6" />
+      <circle fill="#ffeb3b" cx="0" cy="-15" r="6" />
+      <circle fill="#ffeb3b" cx="0" cy="5" r="6" />
+      <circle class="flower-center" cx="0" cy="-5" r="5" />
+    </g>
+  </g>
+
+  <!-- KIDS GROUP: center-left kid running -->
+  <g transform="translate(600,780)">
+    <!-- Shadow -->
+    <ellipse cx="0" cy="70" rx="55" ry="14" fill="#2f6e30" opacity="0.4" />
+
+    <!-- Legs -->
+    <rect class="kid-pants-1" x="-16" y="28" width="12" height="38" rx="4" />
+    <rect class="kid-pants-1" x="8" y="30" width="12" height="38" rx="4" />
+    <rect fill="#263238" x="-18" y="64" width="16" height="8" rx="4" />
+    <rect fill="#263238" x="6" y="66" width="16" height="8" rx="4" />
+
+    <!-- Body -->
+    <rect class="kid-shirt-1" x="-28" y="-5" width="56" height="40" rx="14" />
+
+    <!-- Arms -->
+    <rect class="kid-skin" x="-48" y="0" width="20" height="10" rx="5" transform="rotate(-10,-48,0)" />
+    <rect class="kid-skin" x="28" y="0" width="20" height="10" rx="5" transform="rotate(15,28,0)" />
+
+    <!-- Head -->
+    <circle class="kid-skin" cx="0" cy="-32" r="18" />
+    <!-- Hair -->
+    <path
+      class="kid-hair-dark"
+      d="M-18,-35
+         C-8,-52 8,-52 18,-35
+         C8,-32 -8,-32 -18,-35 Z"
+    />
+    <!-- Simple face -->
+    <circle cx="-7" cy="-32" r="2.3" fill="#3e2723" />
+    <circle cx="7" cy="-32" r="2.3" fill="#3e2723" />
+    <path d="M-6,-24 Q0,-20 6,-24" stroke="#3e2723" stroke-width="2" fill="none" />
+  </g>
+
+  <!-- KID 2: center kid with ball -->
+  <g transform="translate(880,780)">
+    <ellipse cx="0" cy="70" rx="55" ry="14" fill="#2f6e30" opacity="0.4" />
+
+    <!-- Legs -->
+    <rect class="kid-pants-2" x="-16" y="28" width="12" height="38" rx="4" />
+    <rect class="kid-pants-2" x="8" y="28" width="12" height="38" rx="4" />
+    <rect fill="#263238" x="-18" y="64" width="16" height="8" rx="4" />
+    <rect fill="#263238" x="6" y="64" width="16" height="8" rx="4" />
+
+    <!-- Body -->
+    <rect class="kid-shirt-2" x="-28" y="-5" width="56" height="40" rx="14" />
+
+    <!-- Arms holding ball -->
+    <rect class="kid-skin" x="-40" y="-2" width="18" height="10" rx="5" />
+    <rect class="kid-skin" x="22" y="-2" width="18" height="10" rx="5" />
+    <circle cx="0" cy="6" r="14" fill="#fff176" stroke="#f57f17" stroke-width="2" />
+
+    <!-- Head -->
+    <circle class="kid-skin" cx="0" cy="-32" r="18" />
+    <!-- Hair -->
+    <path
+      class="kid-hair-brown"
+      d="M-18,-35
+         C-10,-50 10,-50 18,-35
+         C8,-30 -8,-30 -18,-35 Z"
+    />
+    <!-- Simple face -->
+    <circle cx="-7" cy="-32" r="2.3" fill="#3e2723" />
+    <circle cx="7" cy="-32" r="2.3" fill="#3e2723" />
+    <path d="M-6,-24 Q0,-18 6,-24" stroke="#3e2723" stroke-width="2" fill="none" />
+  </g>
+
+  <!-- KID 3: right kid flying a kite -->
+  <g transform="translate(1180,770)">
+    <ellipse cx="0" cy="76" rx="55" ry="14" fill="#2f6e30" opacity="0.4" />
+
+    <!-- Legs -->
+    <rect class="kid-pants-3" x="-16" y="32" width="12" height="40" rx="4" />
+    <rect class="kid-pants-3" x="8" y="28" width="12" height="40" rx="4" />
+    <rect fill="#263238" x="-18" y="70" width="16" height="8" rx="4" />
+    <rect fill="#263238" x="6" y="68" width="16" height="8" rx="4" />
+
+    <!-- Body -->
+    <rect class="kid-shirt-3" x="-28" y="-5" width="56" height="40" rx="14" />
+
+    <!-- Arms: right arm up holding string -->
+    <rect class="kid-skin" x="-42" y="-2" width="18" height="10" rx="5" />
+    <rect class="kid-skin" x="22" y="-25" width="10" height="34" rx="5" transform="rotate(-12,22,-25)" />
+
+    <!-- Kite string -->
+    <path
+      d="M 30,-22
+         Q 90,-80 150,-130"
+      stroke="#37474f"
+      stroke-width="2"
+      fill="none"
+    />
+
+    <!-- Kite -->
+    <g transform="translate(150,-130)">
+      <polygon
+        points="0,-20 20,0 0,20 -20,0"
+        fill="#ff8a65"
+        stroke="#ef6c00"
+        stroke-width="2"
+      />
+      <line x1="0" y1="20" x2="0" y2="40" stroke="#ef6c00" stroke-width="2" />
+      <polygon points="0,40 8,50 0,60 -8,50" fill="#ffcc80" stroke="#ef6c00" stroke-width="2" />
+    </g>
+
+    <!-- Head -->
+    <circle class="kid-skin" cx="0" cy="-32" r="18" />
+    <!-- Hair -->
+    <path
+      class="kid-hair-blond"
+      d="M-18,-35
+         C-10,-52 10,-52 18,-35
+         C12,-30 -12,-30 -18,-35 Z"
+    />
+    <!-- Simple face -->
+    <circle cx="-7" cy="-32" r="2.3" fill="#3e2723" />
+    <circle cx="7" cy="-32" r="2.3" fill="#3e2723" />
+    <path d="M-6,-24 Q0,-19 6,-24" stroke="#3e2723" stroke-width="2" fill="none" />
+  </g>
+
+  <!-- Gentle foreground highlight band for focusing center area -->
+  <rect
+    x="0"
+    y="720"
+    width="1920"
+    height="260"
+    fill="rgba(255,255,255,0.12)"
+  />
+</svg>

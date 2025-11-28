@@ -265,7 +265,7 @@
   <meta name="description" content="Latih kemampuan membaca anak dengan permainan interaktif menggunakan speech recognition. Baca kata dan kalimat untuk mendapatkan hadiah menarik!" />
 </svelte:head>
 
-<div class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 font-fredoka">
+<div class="flex items-center justify-center min-h-screen p-4 font-fredoka" style="background-image: url('/assets/bg-garden-two.svg'); background-size: cover; background-position: center; background-attachment: fixed;">
   {#if showFinalReward && group}
     <!-- Final Reward Screen -->
     <div class="w-full max-w-2xl p-8 text-center bg-white border-4 border-yellow-400 shadow-2xl rounded-3xl">
