@@ -347,8 +347,8 @@
         <p class="mb-4 text-xl font-bold text-blue-800">📖 Baca kata / kalimat ini:</p>
 
         {#if getCurrentWord()}
-          <div class="{textSize} font-bold text-center mb-4">
-            <WordLetters text={getCurrentWord()!.text} {correctLetterCount} />
+          <div class="mb-4 font-bold text-center">
+            <WordLetters text={getCurrentWord()!.text} {correctLetterCount} {textSize} />
           </div>
         {/if}
       </div>

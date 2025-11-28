@@ -1,6 +1,7 @@
 <script lang="ts">
   export let text: string;
   export let correctLetterCount = 0;
+  export let textSize: string = 'text-4xl'; // Default font size
 
   $: letters = text.split("");
 
@@ -13,13 +14,13 @@
   }
 </script>
 
-<div class="flex justify-center flex-wrap gap-1 mb-2">
+<div class="flex flex-wrap justify-center gap-1 mb-2">
   {#each letters as ch, i}
     {#if ch === " "}
       <span class="w-4"></span>
     {:else}
       <span
-        class="text-4xl font-extrabold px-1 rounded transition-all"
+        class="{textSize} font-extrabold px-1 rounded transition-all"
         class:bg-green-200={isLetterIndexCorrect(i)}
         class:text-green-800={isLetterIndexCorrect(i)}
         class:-translate-y-1={isLetterIndexCorrect(i)}
