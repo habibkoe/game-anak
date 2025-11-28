@@ -146,6 +146,7 @@ export const storage = {
         name: 'Bermain & Aktivitas',
         categoryId: 'cat-1',
         description: 'Kata-kata tentang bermain dan aktivitas anak',
+        difficulty: 'medium',
         finalRewardText: 'Mobil Lego',
         finalRewardImage: '/images/lego-car.png',
         createdAt: new Date()

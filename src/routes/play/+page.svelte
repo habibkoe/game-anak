@@ -56,6 +56,7 @@
           name: publicContent.groupName,
           description: publicContent.groupDescription || '',
           categoryId: 'preview',
+          difficulty: 'medium', // Default difficulty for preview
           finalRewardText: publicContent.finalRewardText,
           finalRewardImage: publicContent.finalRewardImage || '',
           createdAt: new Date()

@@ -55,6 +55,15 @@
   function selectPublicPreview() {
     goto(`/play?preview=true`);
   }
+
+  function getDifficultyBadge(difficulty: 'easy' | 'medium' | 'hard') {
+    const badges = {
+      easy: { text: 'Mudah', color: 'bg-green-100 text-green-800', icon: '⭐' },
+      medium: { text: 'Sedang', color: 'bg-yellow-100 text-yellow-800', icon: '⭐⭐' },
+      hard: { text: 'Sulit', color: 'bg-red-100 text-red-800', icon: '⭐⭐⭐' }
+    };
+    return badges[difficulty];
+  }
 </script>
 
 <svelte:head>
@@ -181,6 +190,12 @@
                   <h3 class="text-xl font-bold text-gray-800">{group.name}</h3>
                   <p class="text-sm text-gray-500">{category?.name || 'Unknown'}</p>
                 </div>
+              </div>
+
+              <div class="flex items-center gap-2 mb-3">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full {getDifficultyBadge(group.difficulty).color}">
+                  {getDifficultyBadge(group.difficulty).icon} {getDifficultyBadge(group.difficulty).text}
+                </span>
               </div>
 
               {#if group.description}

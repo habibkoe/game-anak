@@ -17,6 +17,7 @@
     name: '',
     categoryId: '',
     description: '',
+    difficulty: 'medium' as 'easy' | 'medium' | 'hard',
     finalRewardText: '',
     finalRewardImage: ''
   });
@@ -52,6 +53,7 @@
         name: group.name,
         categoryId: group.categoryId,
         description: group.description || '',
+        difficulty: group.difficulty,
         finalRewardText: group.finalRewardText,
         finalRewardImage: group.finalRewardImage || ''
       };
@@ -60,7 +62,8 @@
       formData = { 
         name: '', 
         categoryId: categories[0]?.id || '', 
-        description: '', 
+        description: '',
+        difficulty: 'medium',
         finalRewardText: '',
         finalRewardImage: ''
       };
@@ -86,6 +89,7 @@
         name: formData.name,
         categoryId: formData.categoryId,
         description: formData.description,
+        difficulty: formData.difficulty,
         finalRewardText: formData.finalRewardText,
         finalRewardImage: formData.finalRewardImage
       });
@@ -100,6 +104,7 @@
         name: formData.name,
         categoryId: formData.categoryId,
         description: formData.description,
+        difficulty: formData.difficulty,
         finalRewardText: formData.finalRewardText,
         finalRewardImage: formData.finalRewardImage
       });
@@ -139,6 +144,15 @@
 
   function getCategoryIcon(categoryId: string): string {
     return categories.find(c => c.id === categoryId)?.icon || '📦';
+  }
+
+  function getDifficultyBadge(difficulty: 'easy' | 'medium' | 'hard') {
+    const badges = {
+      easy: { text: 'Mudah', color: 'bg-green-100 text-green-800', icon: '⭐' },
+      medium: { text: 'Sedang', color: 'bg-yellow-100 text-yellow-800', icon: '⭐⭐' },
+      hard: { text: 'Sulit', color: 'bg-red-100 text-red-800', icon: '⭐⭐⭐' }
+    };
+    return badges[difficulty];
   }
 </script>
 
@@ -224,6 +238,12 @@
               </div>
             </div>
             
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2 py-1 text-xs font-semibold rounded-full {getDifficultyBadge(group.difficulty).color}">
+                {getDifficultyBadge(group.difficulty).icon} {getDifficultyBadge(group.difficulty).text}
+              </span>
+            </div>
+            
             <p class="mb-4 text-sm text-gray-600">{group.description || 'Tidak ada deskripsi'}</p>
             
             <div class="p-3 mb-3 border-2 border-yellow-200 rounded-lg bg-yellow-50">
@@ -287,6 +307,37 @@
             rows="2"
             placeholder="Deskripsi grup..."
           ></textarea>
+        </div>
+
+        <div>
+          <label class="block mb-2 text-sm font-semibold text-gray-700">Tingkat Kesulitan *</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onclick={() => formData.difficulty = 'easy'}
+              class="px-4 py-3 font-semibold border-2 rounded-lg transition-all {formData.difficulty === 'easy' ? 'border-green-500 bg-green-50 text-green-800' : 'border-gray-300 text-gray-700 hover:border-green-300'}"
+            >
+              <div class="text-lg">⭐</div>
+              <div class="text-xs">Mudah</div>
+            </button>
+            <button
+              type="button"
+              onclick={() => formData.difficulty = 'medium'}
+              class="px-4 py-3 font-semibold border-2 rounded-lg transition-all {formData.difficulty === 'medium' ? 'border-yellow-500 bg-yellow-50 text-yellow-800' : 'border-gray-300 text-gray-700 hover:border-yellow-300'}"
+            >
+              <div class="text-lg">⭐⭐</div>
+              <div class="text-xs">Sedang</div>
+            </button>
+            <button
+              type="button"
+              onclick={() => formData.difficulty = 'hard'}
+              class="px-4 py-3 font-semibold border-2 rounded-lg transition-all {formData.difficulty === 'hard' ? 'border-red-500 bg-red-50 text-red-800' : 'border-gray-300 text-gray-700 hover:border-red-300'}"
+            >
+              <div class="text-lg">⭐⭐⭐</div>
+              <div class="text-xs">Sulit</div>
+            </button>
+          </div>
+          <p class="mt-2 text-xs text-gray-500">Pilih tingkat kesulitan untuk grup ini</p>
         </div>
 
         <div class="pt-4 border-t">

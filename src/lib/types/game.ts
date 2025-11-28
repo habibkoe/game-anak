@@ -14,11 +14,14 @@ export type Category = {
   createdAt: Date;
 };
 
+export type DifficultyLevel = 'easy' | 'medium' | 'hard';
+
 export type Group = {
   id: string;
   name: string;
   categoryId: string;
   description?: string;
+  difficulty: DifficultyLevel;
   finalRewardText: string;
   finalRewardImage?: string;
   createdAt: Date;

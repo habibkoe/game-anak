@@ -16,6 +16,7 @@ interface SupabaseGroup {
   category_id: string;
   name: string;
   description: string | null;
+  difficulty: string;
   final_reward_text: string;
   final_reward_image: string | null;
   created_at: string;
@@ -48,6 +49,7 @@ function toGroup(row: SupabaseGroup): Group {
     categoryId: row.category_id,
     name: row.name,
     description: row.description || '',
+    difficulty: (row.difficulty || 'medium') as 'easy' | 'medium' | 'hard',
     finalRewardText: row.final_reward_text,
     finalRewardImage: row.final_reward_image || '',
     createdAt: new Date(row.created_at)
@@ -213,6 +215,7 @@ export const supabaseGame = {
         category_id: group.categoryId,
         name: group.name,
         description: group.description || null,
+        difficulty: group.difficulty,
         final_reward_text: group.finalRewardText,
         final_reward_image: group.finalRewardImage || null
       })
@@ -232,6 +235,7 @@ export const supabaseGame = {
     if (updates.name !== undefined) updateData.name = updates.name;
     if (updates.categoryId !== undefined) updateData.category_id = updates.categoryId;
     if (updates.description !== undefined) updateData.description = updates.description || null;
+    if (updates.difficulty !== undefined) updateData.difficulty = updates.difficulty;
     if (updates.finalRewardText !== undefined) updateData.final_reward_text = updates.finalRewardText;
     if (updates.finalRewardImage !== undefined) updateData.final_reward_image = updates.finalRewardImage || null;
 
