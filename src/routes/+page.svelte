@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-  <title>Game Belajar Membaca - Permainan Edukasi Anak Interaktif</title>
+  <title>Game Belajar Anak - Permainan Edukasi Anak Interaktif</title>
   <meta name="description" content="Permainan interaktif untuk mengajarkan anak-anak membaca dengan gambar dan suara. Banyak kategori, hadiah menarik, dan menggunakan teknologi speech recognition." />
 </svelte:head>
 
@@ -25,7 +25,7 @@
     <!-- Main Card -->
     <div class="p-8 text-center bg-white shadow-2xl rounded-3xl md:p-12">
       <div class="mb-6 text-7xl">🎮</div>
-      <h1 class="mb-4 text-5xl font-bold text-gray-800">Game Belajar Membaca</h1>
+      <h1 class="mb-4 text-5xl font-bold text-gray-800">Game Belajar Anak</h1>
       <p class="mb-8 text-xl text-gray-600">
         Permainan interaktif untuk mengajarkan anak-anak membaca dengan gambar dan suara
       </p>

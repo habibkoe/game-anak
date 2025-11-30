@@ -39,7 +39,7 @@
 </script>
 
 <svelte:head>
-	<title>Game Belajar Membaca - Permainan Edukasi Anak</title>
+	<title>Game Belajar Anak - Permainan Edukasi Anak</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 

@@ -67,7 +67,7 @@
 </script>
 
 <svelte:head>
-  <title>Pilih Permainan - Game Belajar Membaca</title>
+  <title>Pilih Permainan - Game Belajar Anak</title>
   <meta name="description" content="Pilih kategori dan grup permainan untuk mulai belajar membaca. Berbagai pilihan tema dan level untuk anak-anak." />
 </svelte:head>
 

@@ -297,7 +297,7 @@
 </script>
 
 <svelte:head>
-  <title>Bermain - Game Belajar Membaca</title>
+  <title>Bermain - Game Belajar Anak</title>
   <meta name="description" content="Latih kemampuan membaca anak dengan permainan interaktif menggunakan speech recognition. Baca kata dan kalimat untuk mendapatkan hadiah menarik!" />
 </svelte:head>
 

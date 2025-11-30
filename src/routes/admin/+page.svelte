@@ -20,8 +20,8 @@
 </script>
 
 <svelte:head>
-  <title>Admin Panel - Game Belajar Membaca</title>
-  <meta name="description" content="Panel administrasi untuk mengelola kategori, grup, dan kata-kata dalam game belajar membaca. Atur konten permainan edukasi anak." />
+  <title>Admin Panel - Game Belajar Anak</title>
+  <meta name="description" content="Panel administrasi untuk mengelola kategori, grup, dan kata-kata dalam game belajar membaca dan juga berhitung. Atur konten permainan edukasi anak." />
   <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
