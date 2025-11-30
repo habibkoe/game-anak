@@ -24,6 +24,7 @@
   let autoRestartRecognition = $state(false);
   let showFinalReward = $state(false);
   let textSize = $state('text-4xl'); // Default text size
+  let mathAnswer = $state(''); // User's math answer input
 
   function getCategoryIcon(): string {
     if (!group) return '📦';
@@ -68,7 +69,8 @@
           text: w.text,
           imageSrc: w.imageSrc,
           groupId: 'preview',
-          order: w.order
+          order: w.order,
+          contentType: 'word' as const
         }));
         
         if (words.length === 0) {
@@ -170,6 +172,38 @@
     }
   }
 
+  function checkMathAnswer() {
+    const currentWord = getCurrentWord();
+    if (!currentWord || currentWord.contentType !== 'math') return;
+
+    const userAnswer = mathAnswer.trim();
+    const correctAnswer = currentWord.mathAnswer?.trim() || '';
+
+    if (userAnswer === correctAnswer) {
+      status = 'correct';
+      score++;
+      showImage = true;
+
+      // Move to next word or show final reward
+      setTimeout(() => {
+        showImage = false;
+        status = 'idle';
+        mathAnswer = '';
+        currentIndex++;
+
+        // Check if game is finished
+        if (isFinished()) {
+          showFinalReward = true;
+        }
+      }, 4000);
+    } else {
+      status = 'wrong';
+      setTimeout(() => {
+        status = 'idle';
+      }, 1500);
+    }
+  }
+
   function startListening() {
     const w = window as any;
     const SpeechRecognition = w.SpeechRecognition || w.webkitSpeechRecognition;
@@ -255,6 +289,7 @@
     currentIndex = 0;
     score = 0;
     recognizedText = '';
+    mathAnswer = '';
     status = 'idle';
     correctLetterCount = 0;
     showImage = false;
@@ -344,43 +379,78 @@
         </div>
       </div>
 
-      <div class="p-6 mb-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
-        <p class="mb-4 text-xl font-bold text-blue-800">📖 Baca kata / kalimat ini:</p>
+      {#if getCurrentWord()?.contentType === 'math'}
+        <!-- Math Problem Interface -->
+        <div class="p-6 mb-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl">
+          <p class="mb-4 text-xl font-bold text-purple-800">🔢 Selesaikan soal ini:</p>
 
-        {#if getCurrentWord()}
-          <div class="mb-4 font-bold text-center">
-            <WordLetters text={getCurrentWord()!.text} {correctLetterCount} {textSize} />
+          <div class="mb-6 font-bold text-center {textSize} text-purple-900">
+            {getCurrentWord()!.mathQuestion} = ?
           </div>
-        {/if}
-      </div>
 
-      {#if !isListening}
+          <div class="max-w-md mx-auto">
+            <label class="block mb-2 text-sm font-medium text-gray-700">Masukkan jawabanmu:</label>
+            <input
+              type="text"
+              bind:value={mathAnswer}
+              class="w-full px-4 py-3 text-2xl font-bold text-center border-4 border-purple-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-purple-500"
+              placeholder="?"
+              onkeydown={(e) => {
+                if (e.key === 'Enter') {
+                  checkMathAnswer();
+                }
+              }}
+            />
+          </div>
+        </div>
+
         <button
-          class="w-full py-3 mb-4 text-lg font-semibold text-white bg-green-500 rounded-full hover:bg-green-600"
-          onclick={startListening}
+          class="w-full py-3 mb-4 text-lg font-semibold text-white bg-purple-500 rounded-full hover:bg-purple-600"
+          onclick={checkMathAnswer}
+          disabled={!mathAnswer.trim()}
         >
-          Mulai Membaca 🎤
+          Cek Jawaban ✓
         </button>
       {:else}
-        <div class="flex gap-2 mb-4">
-          <div class="flex items-center justify-center flex-1 py-3 text-lg font-semibold text-white bg-blue-500 rounded-full">
-            <span class="animate-pulse">🎤 Mendengarkan...</span>
-          </div>
+        <!-- Word Reading Interface -->
+        <div class="p-6 mb-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+          <p class="mb-4 text-xl font-bold text-blue-800">📖 Baca kata / kalimat ini:</p>
+
+          {#if getCurrentWord()}
+            <div class="mb-4 font-bold text-center">
+              <WordLetters text={getCurrentWord()!.text} {correctLetterCount} {textSize} />
+            </div>
+          {/if}
+        </div>
+
+        {#if !isListening}
           <button
-            class="px-6 py-3 text-lg font-semibold text-white bg-red-500 rounded-full hover:bg-red-600"
-            onclick={stopListening}
+            class="w-full py-3 mb-4 text-lg font-semibold text-white bg-green-500 rounded-full hover:bg-green-600"
+            onclick={startListening}
           >
-            Berhenti
+            Mulai Membaca 🎤
           </button>
+        {:else}
+          <div class="flex gap-2 mb-4">
+            <div class="flex items-center justify-center flex-1 py-3 text-lg font-semibold text-white bg-blue-500 rounded-full">
+              <span class="animate-pulse">🎤 Mendengarkan...</span>
+            </div>
+            <button
+              class="px-6 py-3 text-lg font-semibold text-white bg-red-500 rounded-full hover:bg-red-600"
+              onclick={stopListening}
+            >
+              Berhenti
+            </button>
+          </div>
+        {/if}
+
+        <div class="mb-3 text-left">
+          <p class="text-sm font-medium text-gray-600">Yang terdengar:</p>
+          <div class="border p-2 rounded-lg bg-gray-50 min-h-[40px]">
+            {recognizedText || '—'}
+          </div>
         </div>
       {/if}
-
-      <div class="mb-3 text-left">
-        <p class="text-sm font-medium text-gray-600">Yang terdengar:</p>
-        <div class="border p-2 rounded-lg bg-gray-50 min-h-[40px]">
-          {recognizedText || '—'}
-        </div>
-      </div>
 
       {#if status === 'correct'}
         <p class="text-lg font-semibold text-green-600">Benar! Hebat! 🎉</p>

@@ -17,7 +17,11 @@
     text: '',
     imageSrc: '',
     groupId: '',
-    order: 1
+    order: 1,
+    contentType: 'word' as 'word' | 'math',
+    mathQuestion: '',
+    mathAnswer: '',
+    mathOperator: '+' as '+' | '-' | '×' | '÷'
   });
 
   // Check URL parameters for pre-selected group
@@ -49,7 +53,11 @@
         text: word.text,
         imageSrc: word.imageSrc,
         groupId: word.groupId,
-        order: word.order
+        order: word.order,
+        contentType: word.contentType || 'word',
+        mathQuestion: word.mathQuestion || '',
+        mathAnswer: word.mathAnswer || '',
+        mathOperator: word.mathOperator || '+'
       };
     } else {
       editingId = null;
@@ -59,7 +67,11 @@
         text: '', 
         imageSrc: '',
         groupId: targetGroup,
-        order: existingWords.length + 1
+        order: existingWords.length + 1,
+        contentType: 'word',
+        mathQuestion: '',
+        mathAnswer: '',
+        mathOperator: '+'
       };
     }
     showForm = true;
@@ -71,9 +83,19 @@
   }
 
   async function saveWord() {
-    if (!formData.text.trim() || !formData.groupId || !formData.imageSrc.trim()) {
-      alert('Teks, grup, dan gambar harus diisi!');
-      return;
+    // Validation based on content type
+    if (formData.contentType === 'math') {
+      if (!formData.mathQuestion.trim() || !formData.mathAnswer.trim() || !formData.groupId) {
+        alert('Soal matematika, jawaban, dan grup harus diisi!');
+        return;
+      }
+      // Auto-generate text for math problems
+      formData.text = `${formData.mathQuestion} = ?`;
+    } else {
+      if (!formData.text.trim() || !formData.groupId || !formData.imageSrc.trim()) {
+        alert('Teks, grup, dan gambar harus diisi!');
+        return;
+      }
     }
 
     saving = true;
@@ -83,7 +105,11 @@
         text: formData.text,
         imageSrc: formData.imageSrc,
         groupId: formData.groupId,
-        order: formData.order
+        order: formData.order,
+        contentType: formData.contentType,
+        mathQuestion: formData.contentType === 'math' ? formData.mathQuestion : undefined,
+        mathAnswer: formData.contentType === 'math' ? formData.mathAnswer : undefined,
+        mathOperator: formData.contentType === 'math' ? formData.mathOperator : undefined
       });
       
       if (!success) {
@@ -96,7 +122,11 @@
         text: formData.text,
         imageSrc: formData.imageSrc,
         groupId: formData.groupId,
-        order: formData.order
+        order: formData.order,
+        contentType: formData.contentType,
+        mathQuestion: formData.contentType === 'math' ? formData.mathQuestion : undefined,
+        mathAnswer: formData.contentType === 'math' ? formData.mathAnswer : undefined,
+        mathOperator: formData.contentType === 'math' ? formData.mathOperator : undefined
       });
       
       if (!newWord) {
@@ -270,7 +300,19 @@
               <div class="flex-1">
                 <div class="flex items-start justify-between mb-2">
                   <div>
-                    <p class="mb-1 text-xl font-bold text-gray-800">{word.text}</p>
+                    <div class="flex items-center gap-2 mb-1">
+                      {#if word.contentType === 'math'}
+                        <span class="px-2 py-1 text-xs font-bold text-purple-800 bg-purple-200 rounded">🔢 MATH</span>
+                      {:else}
+                        <span class="px-2 py-1 text-xs font-bold text-blue-800 bg-blue-200 rounded">📝 WORD</span>
+                      {/if}
+                      <p class="text-xl font-bold text-gray-800">{word.text}</p>
+                    </div>
+                    {#if word.contentType === 'math' && word.mathQuestion}
+                      <p class="mb-1 text-sm font-semibold text-purple-600">
+                        Soal: {word.mathQuestion} {word.mathOperator || ''} = <span class="text-green-600">{word.mathAnswer}</span>
+                      </p>
+                    {/if}
                     <p class="text-sm text-gray-500">
                       {category?.icon || '📦'} {getGroupName(word.groupId)}
                       {#if category}
@@ -304,8 +346,33 @@
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto bg-black bg-opacity-50">
     <div class="w-full max-w-2xl p-6 my-8 bg-white shadow-2xl rounded-2xl">
       <h2 class="mb-4 text-2xl font-bold text-gray-800">
-        {editingId ? 'Edit Kata' : 'Tambah Kata'}
+        {editingId ? 'Edit Konten' : 'Tambah Konten'}
       </h2>
+
+      <!-- Content Type Selection -->
+      <div class="p-4 mb-4 border-2 border-gray-200 rounded-lg bg-gray-50">
+        <label class="block mb-2 text-sm font-semibold text-gray-700">Tipe Konten *</label>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              bind:group={formData.contentType}
+              value="word"
+              class="w-4 h-4 text-blue-600"
+            />
+            <span class="font-semibold">📝 Kata/Kalimat (Baca)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              bind:group={formData.contentType}
+              value="math"
+              class="w-4 h-4 text-purple-600"
+            />
+            <span class="font-semibold">🔢 Soal Matematika</span>
+          </label>
+        </div>
+      </div>
       
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <!-- Left Column -->
@@ -326,16 +393,53 @@
             </select>
           </div>
 
-          <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">Teks / Kalimat *</label>
-            <textarea
-              bind:value={formData.text}
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              rows="4"
-              placeholder="Contoh: Anak bermain bola"
-            ></textarea>
-            <p class="mt-1 text-xs text-gray-500">Teks yang harus dibaca anak</p>
-          </div>
+          {#if formData.contentType === 'word'}
+            <div>
+              <label class="block mb-2 text-sm font-semibold text-gray-700">Teks / Kalimat *</label>
+              <textarea
+                bind:value={formData.text}
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                rows="4"
+                placeholder="Contoh: Anak bermain bola"
+              ></textarea>
+              <p class="mt-1 text-xs text-gray-500">Teks yang harus dibaca anak</p>
+            </div>
+          {:else}
+            <div>
+              <label class="block mb-2 text-sm font-semibold text-gray-700">Operator *</label>
+              <select
+                bind:value={formData.mathOperator}
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="+">+ (Tambah)</option>
+                <option value="-">- (Kurang)</option>
+                <option value="×">× (Kali)</option>
+                <option value="÷">÷ (Bagi)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block mb-2 text-sm font-semibold text-gray-700">Soal Matematika *</label>
+              <input
+                type="text"
+                bind:value={formData.mathQuestion}
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Contoh: 4 + 5"
+              />
+              <p class="mt-1 text-xs text-gray-500">Soal yang ditampilkan ke anak</p>
+            </div>
+
+            <div>
+              <label class="block mb-2 text-sm font-semibold text-gray-700">Jawaban yang Benar *</label>
+              <input
+                type="text"
+                bind:value={formData.mathAnswer}
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Contoh: 9"
+              />
+              <p class="mt-1 text-xs text-gray-500">Jawaban yang benar untuk validasi</p>
+            </div>
+          {/if}
 
           <div>
             <label class="block mb-2 text-sm font-semibold text-gray-700">Urutan</label>
@@ -352,7 +456,9 @@
         <!-- Right Column -->
         <div class="space-y-4">
           <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">Upload Gambar *</label>
+            <label class="block mb-2 text-sm font-semibold text-gray-700">
+              Upload Gambar {formData.contentType === 'word' ? '*' : '(opsional)'}
+            </label>
             <ImageUploader
               currentImageUrl={formData.imageSrc}
               onImageUploaded={(url) => formData.imageSrc = url}
@@ -361,15 +467,27 @@
             />
           </div>
 
-          <div class="p-3 border border-blue-200 rounded-lg bg-blue-50">
-            <p class="mb-1 text-xs font-semibold text-blue-800">💡 Tips:</p>
-            <ul class="space-y-1 text-xs text-blue-700">
-              <li>• Upload gambar langsung atau drag & drop</li>
-              <li>• Crop dan adjust gambar sebelum upload</li>
-              <li>• Gambar akan otomatis dioptimasi</li>
-              <li>• Max ukuran file: 5MB</li>
-            </ul>
-          </div>
+          {#if formData.contentType === 'word'}
+            <div class="p-3 border border-blue-200 rounded-lg bg-blue-50">
+              <p class="mb-1 text-xs font-semibold text-blue-800">💡 Tips Kata/Kalimat:</p>
+              <ul class="space-y-1 text-xs text-blue-700">
+                <li>• Upload gambar langsung atau drag & drop</li>
+                <li>• Crop dan adjust gambar sebelum upload</li>
+                <li>• Gambar akan otomatis dioptimasi</li>
+                <li>• Max ukuran file: 5MB</li>
+              </ul>
+            </div>
+          {:else}
+            <div class="p-3 border border-purple-200 rounded-lg bg-purple-50">
+              <p class="mb-1 text-xs font-semibold text-purple-800">💡 Tips Matematika:</p>
+              <ul class="space-y-1 text-xs text-purple-700">
+                <li>• Soal: tulis operasinya (misal: 4 + 5)</li>
+                <li>• Jawaban: tulis angka hasil yang benar</li>
+                <li>• Gambar: sebagai reward saat benar (opsional)</li>
+                <li>• Anak akan menginput jawaban mereka</li>
+              </ul>
+            </div>
+          {/if}
 
           <!-- Optional: Manual URL Input -->
           <div>

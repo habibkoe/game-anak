@@ -29,6 +29,10 @@ interface SupabaseWord {
   text: string;
   image_src: string;
   order_position: number;
+  content_type: string;
+  math_question: string | null;
+  math_answer: string | null;
+  math_operator: string | null;
   created_at: string;
 }
 
@@ -62,7 +66,11 @@ function toWord(row: SupabaseWord): GameWord {
     groupId: row.group_id,
     text: row.text,
     imageSrc: row.image_src,
-    order: row.order_position
+    order: row.order_position,
+    contentType: (row.content_type || 'word') as 'word' | 'math',
+    mathQuestion: row.math_question || undefined,
+    mathAnswer: row.math_answer || undefined,
+    mathOperator: row.math_operator as '+' | '-' | '×' | '÷' | undefined
   };
 }
 
@@ -331,7 +339,11 @@ export const supabaseGame = {
         group_id: word.groupId,
         text: word.text,
         image_src: word.imageSrc,
-        order_position: word.order
+        order_position: word.order,
+        content_type: word.contentType || 'word',
+        math_question: word.mathQuestion || null,
+        math_answer: word.mathAnswer || null,
+        math_operator: word.mathOperator || null
       })
       .select()
       .single();
@@ -350,6 +362,10 @@ export const supabaseGame = {
     if (updates.groupId !== undefined) updateData.group_id = updates.groupId;
     if (updates.imageSrc !== undefined) updateData.image_src = updates.imageSrc;
     if (updates.order !== undefined) updateData.order_position = updates.order;
+    if (updates.contentType !== undefined) updateData.content_type = updates.contentType;
+    if (updates.mathQuestion !== undefined) updateData.math_question = updates.mathQuestion || null;
+    if (updates.mathAnswer !== undefined) updateData.math_answer = updates.mathAnswer || null;
+    if (updates.mathOperator !== undefined) updateData.math_operator = updates.mathOperator || null;
 
     const { error } = await supabase
       .from('words')

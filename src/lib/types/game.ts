@@ -1,9 +1,15 @@
+export type ContentType = 'word' | 'math';
+
 export type GameWord = {
   id: string;
   text: string;
   imageSrc: string;
   groupId: string;
   order: number;
+  contentType: ContentType;
+  mathQuestion?: string;
+  mathAnswer?: string;
+  mathOperator?: '+' | '-' | '×' | '÷';
 };
 
 export type Category = {
